@@ -1,12 +1,20 @@
 package main
 
 import (
-	"os"
+	"netzer/ping"
+	"netzer/utils"
+	// "netzer/ip"
 	"log"
+	"os"
 	"github.com/urfave/cli/v2" // imports as package "cli"
 )
 
 func main()  {
+	err := utils.SettingsFile()
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
 	app := &cli.App{
 		Name: "netzer",
 		Usage: "[NETWORK ANALYZER] A network utility tool for analyzing network reliability and stability", 
@@ -19,7 +27,37 @@ func main()  {
 				Name: "ping-all",
 				Aliases: []string{"pa"},
 				Usage: "ping all servers in the IP list",
-				Action: pingAllServers,
+				Action: ping.PingMain,
+			},
+			{
+				Name: "ping-specific-ip",
+				Aliases: []string{"psi"},
+				Usage: "ping a specific IP address/server address",
+				Action: ping.PingMain,
+			},
+			{
+				Name: "ping",
+				Aliases: []string{"p"},
+				Usage: "netzer ping utility",
+				Action: ping.PingMain,
+			},
+			{
+				Name: "add-ip-to-list",
+				Aliases: []string{"ail"},
+				Usage: "add an IP address to the list",
+				Action: addIP,
+			},
+			{
+				Name: "remove-ip-from-list",
+				Aliases: []string{"ril"},
+				Usage: "remove an IP address from the list",
+				Action: removeIP,
+			},
+			{
+				Name: "generate-ip-file",
+				Aliases: []string{"gif"},
+				Usage: "generate a file with a list of IP addresses",
+				Action: genIPFile,
 			},
 			{
 				Name: "stability-analyzer",
@@ -57,40 +95,11 @@ func main()  {
 				Usage: "show cli version",
 				Action: showVersion,
 			},
-			{
-				Name: "ping-specific-ip",
-				Aliases: []string{"psi"},
-				Usage: "ping a specific IP address/server address",
-				Action: pingSpecificIP,
-			},
-			{
-				Name: "add-ip-to-list",
-				Aliases: []string{"ail"},
-				Usage: "add an IP address to the list",
-				Action: addIP,
-			},
-			{
-				Name: "remove-ip-from-list",
-				Aliases: []string{"ril"},
-				Usage: "remove an IP address from the list",
-				Action: removeIP,
-			},
-			{
-				Name: "generate-ip-file",
-				Aliases: []string{"gif"},
-				Usage: "generate a file with a list of IP addresses",
-				Action: genIPFile,
-			},
 		},
 	}
 	if err := app.Run(os.Args); err != nil {
 		log.Fatal(err)
 	}
-}
-
-func pingAllServers(c *cli.Context) error {
-	println("Pinging all servers in the IP list")
-	return nil
 }
 
 func analyzeNetworkStability(c *cli.Context) error {
@@ -120,11 +129,6 @@ func showHelp(c *cli.Context) error {
 
 func showVersion(c *cli.Context) error {
 	println("Version 1.0.0")
-	return nil
-}
-
-func pingSpecificIP(c *cli.Context) error {
-	println("Pinging a specific IP address/server address")
 	return nil
 }
 
