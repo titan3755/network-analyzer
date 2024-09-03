@@ -7,40 +7,39 @@ import (
 	"strings"
 	"time"
 	"github.com/pterm/pterm"
-	"github.com/pterm/pterm/putils"
 	"github.com/urfave/cli/v2"
 )
 
-func PingIntro() {
-	utils.ResetTerminal()
-	pterm.DefaultBigText.WithLetters(
-		putils.LettersFromStringWithStyle("NetZer  ", pterm.FgCyan.ToStyle()),
-		putils.LettersFromStringWithStyle("Ping", pterm.FgLightMagenta.ToStyle()),
-	).Render()
-	pterm.Info.Println("Welcome to NetZer Ping!")
-	pterm.Info.Println("This tool allows you to ping all servers in the IP list or a specific server.")
-	fmt.Println()
-}
-
 func PingMain(c *cli.Context) error {
-	PingIntro()
+	utils.PingIntro()
 	if c.Command.Name == "ping-all" || c.Command.Name == "pa" {
 		PingAllIP()
 	} else if c.Command.Name == "ping-specific-ip" || c.Command.Name == "psi" {
 		pterm.Info.Println(fmt.Sprintf("Started pinging %v: Press Ctrl+C to stop", c.Args().Get(0)))
+		fmt.Println()
+		var count_loop int = 0
+		var sum_lantency float64 = 0
+		var average_latency float64 = 0
+		var latency_list []float64
+		var highest_latency float64
+		var lowest_latency float64
 		area, _ := pterm.DefaultArea.Start()
 		for {
 			latency := PingSpecificIP(c.Args().Get(0))
 			if strings.Contains(latency, "Error") {
 				area.Update(pterm.Error.Sprintf("Error: %s", latency))
 			} else {
-				area.Update(pterm.Success.Sprintf("Latency: %s", latency))
+				count_loop++
+				latency_float, _ := time.ParseDuration(latency)
+				sum_lantency += float64(latency_float.Milliseconds())
+				average_latency = sum_lantency / float64(count_loop)
+				latency_list = append(latency_list, float64(latency_float.Milliseconds()))
+				highest_latency = utils.FindMax(latency_list)
+				lowest_latency = utils.FindMin(latency_list)
+				area.Update(pterm.Success.Sprintf("Latency: %s\nAverage: %s\nHighest: %dms\nLowest: %dms", latency, time.Duration(average_latency) * time.Millisecond, int(highest_latency), int(lowest_latency)))
 			}
-			// Pause for 0.5 s before the next update.
 			time.Sleep(time.Second / 2)
 		}
-		area.Stop()
-		// end pterm area
 	} else if c.Command.Name == "ping" || c.Command.Name == "p" {
 		PingAllIP()
 	} else {

@@ -3,7 +3,7 @@ package main
 import (
 	"netzer/ping"
 	"netzer/utils"
-	// "netzer/ip"
+	"netzer/ip"
 	"log"
 	"os"
 	"github.com/urfave/cli/v2" // imports as package "cli"
@@ -24,6 +24,12 @@ func main()  {
 		},
 		Commands: []*cli.Command{
 			{
+				Name: "ping",
+				Aliases: []string{"p"},
+				Usage: "netzer ping utility",
+				Action: ping.PingMain,
+			},
+			{
 				Name: "ping-all",
 				Aliases: []string{"pa"},
 				Usage: "ping all servers in the IP list",
@@ -35,21 +41,21 @@ func main()  {
 				Usage: "ping a specific IP address/server address",
 				Action: ping.PingMain,
 			},
+			// {
+			// 	Name: "ip",
+			// 	Aliases: []string{"i"},
+			// 	Usage: "netzer ip utility",
+			// 	Action: ip.,
+			// },
 			{
-				Name: "ping",
-				Aliases: []string{"p"},
-				Usage: "netzer ping utility",
-				Action: ping.PingMain,
-			},
-			{
-				Name: "add-ip-to-list",
-				Aliases: []string{"ail"},
+				Name: "add-ip-to-file",
+				Aliases: []string{"aif"},
 				Usage: "add an IP address to the list",
-				Action: addIP,
+				Action: ip.AddIPToFileMain,
 			},
 			{
-				Name: "remove-ip-from-list",
-				Aliases: []string{"ril"},
+				Name: "remove-ip-from-file",
+				Aliases: []string{"rif"},
 				Usage: "remove an IP address from the list",
 				Action: removeIP,
 			},
@@ -57,19 +63,25 @@ func main()  {
 				Name: "generate-ip-file",
 				Aliases: []string{"gif"},
 				Usage: "generate a file with a list of IP addresses",
-				Action: genIPFile,
+				Action: ip.IPFileGeneratorMain,
 			},
 			{
-				Name: "stability-analyzer",
+				Name: "use-ip-file",
+				Aliases: []string{"uif"},
+				Usage: "use a IP file at a specified location",
+				Action: useIPFile,
+			},
+			{
+				Name: "read-ip-file",
+				Aliases: []string{"rdf"},
+				Usage: "read the IP file and display the IP addresses",
+				Action: readIPFile,
+			},
+			{
+				Name: "stability-analysis",
 				Aliases: []string{"sa"},
 				Usage: "analyze network stability",
 				Action: analyzeNetworkStability,
-			},
-			{
-				Name: "speed-test",
-				Aliases: []string{"st"},
-				Usage: "perform a speed test",
-				Action: speedTest,
 			},
 			{
 				Name: "full-analysis",
@@ -79,9 +91,15 @@ func main()  {
 			},
 			{
 				Name: "long-term-analysis",
-				Aliases: []string{"lta"},
+				Aliases: []string{"la"},
 				Usage: "perform a long term network analysis",
 				Action: analyzeNetworkStabilityLT,
+			},
+			{
+				Name: "speed-test",
+				Aliases: []string{"st"},
+				Usage: "perform a speed test",
+				Action: speedTest,
 			},
 			{
 				Name: "help",
@@ -132,17 +150,17 @@ func showVersion(c *cli.Context) error {
 	return nil
 }
 
-func addIP(c *cli.Context) error {
-	println("Adding an IP address to the list")
-	return nil
-}
-
 func removeIP(c *cli.Context) error {
 	println("Removing an IP address from the list")
 	return nil
 }
 
-func genIPFile(c *cli.Context) error {
-	println("Generating a file with a list of IP addresses")
+func useIPFile(c *cli.Context) error {
+	println("Using a IP file at a specified location")
+	return nil
+}
+
+func readIPFile(c *cli.Context) error {
+	println("Reading the IP file and displaying the IP addresses")
 	return nil
 }
