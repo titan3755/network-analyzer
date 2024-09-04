@@ -15,7 +15,7 @@ func CheckIfValidIPv4(ip string) bool {
 		return false
 	}
 	//check for invalid length
-	if len(ip) > 15 {
+	if len(ip) > 21 || len(ip) < 9 {
 		return false
 	}
 	//check for invalid IP address

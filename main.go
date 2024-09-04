@@ -48,16 +48,28 @@ func main()  {
 			// 	Action: ip.,
 			// },
 			{
-				Name: "add-ip-to-file",
-				Aliases: []string{"aif"},
-				Usage: "add an IP address to the list",
-				Action: ip.AddIPToFileMain,
+				Name: "add-single-ip-to-file",
+				Aliases: []string{"asif"},
+				Usage: "add an IP address to the file",
+				Action: ip.AddSingleIPToFileMain,
 			},
 			{
-				Name: "remove-ip-from-file",
-				Aliases: []string{"rif"},
-				Usage: "remove an IP address from the list",
-				Action: removeIP,
+				Name: "add-multiple-ip-to-file",
+				Aliases: []string{"amif"},
+				Usage: "add many IP addresses to the file",
+				Action: ip.AddMultipleIPToFileMain,
+			},
+			{
+				Name: "remove-single-ip-from-file",
+				Aliases: []string{"rsif"},
+				Usage: "remove an IP address from the file",
+				Action: ip.RemoveSingleIPFromFileMain,
+			},
+			{
+				Name: "remove-multiple-ip-from-file",
+				Aliases: []string{"rmif"},
+				Usage: "remove multiple IP addresses from the file",
+				Action: ip.RemoveMultipleIPFromFileMain,
 			},
 			{
 				Name: "generate-ip-file",
@@ -87,7 +99,7 @@ func main()  {
 				Name: "full-analysis",
 				Aliases: []string{"fa"},
 				Usage: "perform a full network analysis",
-				Action: analyzeNetworkStability,
+				Action: fullNetworkAnalysis,
 			},
 			{
 				Name: "long-term-analysis",
@@ -147,11 +159,6 @@ func showHelp(c *cli.Context) error {
 
 func showVersion(c *cli.Context) error {
 	println("Version 1.0.0")
-	return nil
-}
-
-func removeIP(c *cli.Context) error {
-	println("Removing an IP address from the list")
 	return nil
 }
 
