@@ -43,6 +43,9 @@ func AddMultipleIPToFileMain(c *cli.Context) error {
 	}
 	var ipList []string
 	for _, ip := range c.Args().Slice() {
+		if ip == c.Args().First() {
+			continue
+		}
 		ern := utils.CheckIfValidIPv4(ip)
 		if ern {
 			ipList = append(ipList, ip)	
@@ -60,6 +63,14 @@ func AddMultipleIPToFileMain(c *cli.Context) error {
 }
 
 func addMultipleIPToFile(ipConvFormat string, location string) error {
+	// check if file format is valid if file is not empty
+	if dat, ern := os.ReadFile(location); ern != nil {
+		return ern
+	} else if string(dat) != "" {
+		if err := utils.CheckIPFileFormatValidity(location); err != nil {
+			return err
+		}
+	}
 	// check if file exists
 	if _, err := os.Stat(location); os.IsNotExist(err) {
 		return fmt.Errorf("file does not exist")
@@ -86,6 +97,14 @@ func addMultipleIPToFile(ipConvFormat string, location string) error {
 
 
 func addIPToFile(ip string, location string) error {
+	// check if file format is valid if file is not empty
+	if dat, ern := os.ReadFile(location); ern != nil {
+		return ern
+	} else if string(dat) != "" {
+		if err := utils.CheckIPFileFormatValidity(location); err != nil {
+			return err
+		}
+	}
 	// check if IP address is valid
 	if !utils.CheckIfValidIPv4(ip) {
 		return fmt.Errorf("invalid ip address")
@@ -94,7 +113,7 @@ func addIPToFile(ip string, location string) error {
 	if in, err := utils.CheckIfIPAlreadyInFile(ip, location); err != nil {
 		return err
 	} else if in {
-		return fmt.Errorf("ip address already in file")
+		return fmt.Errorf("ip address(es) already in file")
 	}
 	// check if file exists
 	if _, err := os.Stat(location); os.IsNotExist(err) {

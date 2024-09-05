@@ -44,6 +44,9 @@ func RemoveMultipleIPFromFileMain(c *cli.Context) error {
 	}
 	var ipList []string
 	for _, ip := range c.Args().Slice() {
+		if ip == c.Args().First() {
+			continue
+		}
 		ern := utils.CheckIfValidIPv4(ip)
 		if ern {
 			ipList = append(ipList, ip)	
@@ -66,6 +69,15 @@ func RemoveMultipleIPFromFileMain(c *cli.Context) error {
 }
 
 func removeIPFromFile(ip string, fileLocation string) error {
+	// check if file exists
+	if _, err := os.Stat(fileLocation); os.IsNotExist(err) {
+		return fmt.Errorf("file does not exist")
+	}
+	// check if file is in correct format
+	errn := utils.CheckIPFileFormatValidity(fileLocation)
+	if errn != nil {
+		return errn
+	}
 	// open and read file at location
 	chk, err := utils.CheckIfIPAlreadyInFile(ip, fileLocation)
 	if err != nil {
@@ -103,6 +115,15 @@ func removeIPFromFile(ip string, fileLocation string) error {
 }
 
 func removeMultipleIPFromFile(ipConvFormat string, location string) error {
+	// check if file exists
+	if _, err := os.Stat(location); os.IsNotExist(err) {
+		return fmt.Errorf("file does not exist")
+	}
+	// check if file is in correct format
+	errn := utils.CheckIPFileFormatValidity(location)
+	if errn != nil {
+		return errn
+	}
 	// open and read file at location
 	chk, err := utils.CheckIfIPAlreadyInFile(ipConvFormat, location)
 	if err != nil {

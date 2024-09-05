@@ -1,5 +1,9 @@
 package utils
 
+import (
+	"strings"
+)
+
 func ConvListOfIPToFileFormat(ipList []string) string {
 	var ipString string
 	for _, ip := range ipList {
@@ -9,11 +13,5 @@ func ConvListOfIPToFileFormat(ipList []string) string {
 }
 
 func ConvFileFormatToListOfIP(ipString string) []string {
-	var ipList []string
-	for _, ip := range ipString {
-		if ip == ';' {
-			ipList = append(ipList, string(ip))
-		}
-	}
-	return ipList
+	return strings.Split(ipString, ";")
 }

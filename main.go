@@ -81,13 +81,13 @@ func main()  {
 				Name: "use-ip-file",
 				Aliases: []string{"uif"},
 				Usage: "use a IP file at a specified location",
-				Action: useIPFile,
+				Action: ip.UseIPFileMain,
 			},
 			{
 				Name: "read-ip-file",
 				Aliases: []string{"rdf"},
 				Usage: "read the IP file and display the IP addresses",
-				Action: readIPFile,
+				Action: ip.ReadIPFromFileMain,
 			},
 			{
 				Name: "stability-analysis",
@@ -159,15 +159,5 @@ func showHelp(c *cli.Context) error {
 
 func showVersion(c *cli.Context) error {
 	println("Version 1.0.0")
-	return nil
-}
-
-func useIPFile(c *cli.Context) error {
-	println("Using a IP file at a specified location")
-	return nil
-}
-
-func readIPFile(c *cli.Context) error {
-	println("Reading the IP file and displaying the IP addresses")
 	return nil
 }
