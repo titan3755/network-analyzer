@@ -35,6 +35,11 @@ func useIPFile(filePath string) error {
 	if errn != nil {
 		return errn
 	}
+	// check and remove duplicate ip addresses
+	errns := utils.RemoveDuplicateIPFromFile(filePath)
+	if errns != nil {
+		return errns
+	}
 	// set file path as currently used ip file in the settings.pfp
 	err := utils.SetSettings("ip_file", filePath)
 	if err != nil {

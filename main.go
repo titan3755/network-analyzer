@@ -1,20 +1,33 @@
 package main
 
 import (
+	"log"
+	"netzer/basic"
+	"netzer/ip"
 	"netzer/ping"
 	"netzer/utils"
-	"netzer/ip"
-	"log"
 	"os"
+
 	"github.com/urfave/cli/v2" // imports as package "cli"
 )
 
-func main()  {
+func preChecks() {
 	err := utils.SettingsFile()
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
+	_, ern := utils.GetSettings("ip_file")
+	if ern != nil {
+		// clear the file
+		err := os.WriteFile("settings.prp", []byte(""), 0666)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+
+func mainApp() {
 	app := &cli.App{
 		Name: "netzer",
 		Usage: "[NETWORK ANALYZER] A network utility tool for analyzing network reliability and stability", 
@@ -23,12 +36,12 @@ func main()  {
 			return nil
 		},
 		Commands: []*cli.Command{
-			{
-				Name: "ping",
-				Aliases: []string{"p"},
-				Usage: "netzer ping utility",
-				Action: ping.PingMain,
-			},
+			// {
+			// 	Name: "ping",
+			// 	Aliases: []string{"p"},
+			// 	Usage: "netzer ping utility",
+			// 	Action: ping.PingMain,
+			// },
 			{
 				Name: "ping-all",
 				Aliases: []string{"pa"},
@@ -117,13 +130,19 @@ func main()  {
 				Name: "help",
 				Aliases: []string{"h"},
 				Usage: "show help",
-				Action: showHelp,
+				Action: basic.ShowHelp,
 			},
 			{
 				Name: "version",
 				Aliases: []string{"v"},
 				Usage: "show cli version",
-				Action: showVersion,
+				Action: basic.ShowVersion,
+			},
+			{
+				Name: "show-settings",
+				Aliases: []string{"ss"},
+				Usage: "show settings",
+				Action: basic.ShowSettings,
 			},
 		},
 	}
@@ -131,6 +150,13 @@ func main()  {
 		log.Fatal(err)
 	}
 }
+
+func main()  {
+	preChecks()
+	mainApp()
+}
+
+// placeholder functions
 
 func analyzeNetworkStability(c *cli.Context) error {
 	println("Analyzing network stability")
@@ -149,15 +175,5 @@ func speedTest(c *cli.Context) error {
 
 func analyzeNetworkStabilityLT(c *cli.Context) error {
 	println("Performing a long term network analysis")
-	return nil
-}
-
-func showHelp(c *cli.Context) error {
-	cli.ShowAppHelp(c)
-	return nil
-}
-
-func showVersion(c *cli.Context) error {
-	println("Version 1.0.0")
 	return nil
 }

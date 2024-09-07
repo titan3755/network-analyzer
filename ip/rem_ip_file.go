@@ -44,7 +44,7 @@ func RemoveMultipleIPFromFileMain(c *cli.Context) error {
 	}
 	var ipList []string
 	for _, ip := range c.Args().Slice() {
-		if ip == c.Args().First() {
+		if ip == c.Args().First() || ip == "" {
 			continue
 		}
 		ern := utils.CheckIfValidIPv4(ip)
@@ -125,38 +125,30 @@ func removeMultipleIPFromFile(ipConvFormat string, location string) error {
 		return errn
 	}
 	// open and read file at location
-	chk, err := utils.CheckIfIPAlreadyInFile(ipConvFormat, location)
+	dat, err := os.ReadFile(location)
 	if err != nil {
 		return err
 	}
-	if chk	{
-		// open and read file at location
-		dat, err := os.ReadFile(location)
-		if err != nil {
-			return err
-		}
-		// remove the ip from data
-		if string(dat) == "" {
-			return nil
-		}
-		var newDat string
-		for _, line := range strings.Split(string(dat), ";") {
-			if strings.Contains(ipConvFormat, line) {
-				continue
-			}
-			newDat += line + ";"
-		}
-		file, er := os.OpenFile(location,
-			os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
-		if er != nil {
-			return er
-		}
-		defer file.Close()
-		_, err = file.WriteString(newDat)
-		if err != nil {
-			return err
-		}
+	// remove the ip from data
+	if string(dat) == "" {
 		return nil
 	}
-	return fmt.Errorf("ip address not in file")
+	var newDat string
+	for _, line := range strings.Split(string(dat), ";") {
+		if strings.Contains(ipConvFormat, line) || line == "" {
+			continue
+		}
+		newDat += line + ";"
+	}
+	file, er := os.OpenFile(location,
+		os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
+	if er != nil {
+		return er
+	}
+	defer file.Close()
+	_, err = file.WriteString(newDat)
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -2,10 +2,10 @@ package ip
 
 import (
 	"fmt"
-	"os"
-	"github.com/urfave/cli/v2"
-	"github.com/pterm/pterm"
 	"netzer/utils"
+	"os" 
+	"github.com/pterm/pterm"
+	"github.com/urfave/cli/v2"
 )
 
 func AddSingleIPToFileMain(c *cli.Context) error {
@@ -76,10 +76,13 @@ func addMultipleIPToFile(ipConvFormat string, location string) error {
 		return fmt.Errorf("file does not exist")
 	}
 	// check if IP addresses are already in file
-	if in, err := utils.CheckIfIPAlreadyInFile(ipConvFormat, location); err != nil {
-		return err
-	} else if in {
-		return fmt.Errorf("ip addresses already in file")
+	ip_nList := utils.ConvFileFormatToListOfIP(string(ipConvFormat))
+	for _, ip := range ip_nList {
+		if in, err := utils.CheckIfIPAlreadyInFile(ip, location); err != nil {
+			return err
+		} else if in && ip != "" {
+			return fmt.Errorf("ip address(es) already in file")
+		}
 	}
 	// add IP addresses to file
 	file, err := os.OpenFile(location,
