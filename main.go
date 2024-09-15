@@ -142,7 +142,7 @@ func mainApp() {
 				Name: "show-settings",
 				Aliases: []string{"ss"},
 				Usage: "show settings",
-				Action: basic.ShowSettings,
+				Action: basic.ShowSettingsMain,
 			},
 		},
 	}

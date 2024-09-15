@@ -39,3 +39,22 @@ func GetSettings(setting string) (string, error) {
 	}
 	return "", fmt.Errorf("setting not found")
 }
+
+func ReadSettings(fileName string) map[string]string {
+	// open and read file at location
+	file, err := os.Open(fileName)
+	if err != nil {
+		return nil
+	}
+	defer file.Close()
+	var temp string
+	settings := make(map[string]string)
+	for {
+		_, err := fmt.Fscan(file, &temp)
+		if err != nil {
+			break
+		}
+		settings[strings.Split(temp, "=")[0]] = strings.Split(temp, "=")[1]
+	}
+	return settings
+}
