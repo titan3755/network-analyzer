@@ -46,7 +46,7 @@ func mainApp() {
 				Name: "ping-all",
 				Aliases: []string{"pa"},
 				Usage: "ping all servers in the IP list",
-				Action: ping.PingMain,
+				Action: ping.PingAllMain,
 			},
 			{
 				Name: "ping-specific-ip",
