@@ -28,3 +28,7 @@ func PingAllMain(c *cli.Context) error {
 	pterm.Info.Println("Pinging IPs ...")
 	return nil
 }
+
+func pingAll() {
+	
+}
