@@ -6,6 +6,8 @@ import (
 	"fmt"
 )
 
+// this function is the intro to the ping utility of netzer
+
 func PingIntro() {
 	ResetTerminal()
 	pterm.DefaultBigText.WithLetters(
@@ -16,6 +18,8 @@ func PingIntro() {
 	pterm.Info.Println("This utility allows you to ping all servers in the IP list or a specific server.")
 	fmt.Println()
 }
+
+// this function is the intro to the IP utility of netzer
 
 func IPIntro() {
 	ResetTerminal()
@@ -28,6 +32,8 @@ func IPIntro() {
 	fmt.Println()
 }
 
+// this function is the intro to the Analyzer utility of netzer	
+
 func AnalyzerIntro() {
 	ResetTerminal()
 	pterm.DefaultBigText.WithLetters(
@@ -38,6 +44,8 @@ func AnalyzerIntro() {
 	pterm.Info.Println("This utility allows you to analyze network reliability and stability.")
 	fmt.Println()
 }
+
+// this function is the intro to the Basic utility of netzer
 
 func BasicIntro() {
 	ResetTerminal()

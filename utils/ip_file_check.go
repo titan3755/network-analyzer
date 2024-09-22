@@ -6,6 +6,8 @@ import (
 	"fmt"
 )
 
+// this function checks if the ip is already in the file
+
 func CheckIfIPAlreadyInFile(ip string, fileLocation string) (bool, error) {
 	file, err := os.Open(fileLocation)
 	if err != nil {
@@ -28,6 +30,8 @@ func CheckIfIPAlreadyInFile(ip string, fileLocation string) (bool, error) {
 	}
 	return false, nil
 }
+
+// this function removes duplicate ip addresses from the file
 
 func RemoveDuplicateIPFromFile(filePath string) error {
 	// check if file exists

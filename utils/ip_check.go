@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+// CheckIfValidIPv4 is a function that checks if the IP address is valid or not
+
 func CheckIfValidIPv4(ip string) bool {
 	//check for spaces
 	if strings.Contains(ip, " ") {

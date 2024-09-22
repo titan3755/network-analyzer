@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+// CheckIPFileFormatValidity is a function that checks if the file is in the correct format
+
 func CheckIPFileFormatValidity(fileLocation string) error {
 	// check if file exists
 	if _, err := os.Stat(fileLocation); os.IsNotExist(err) {

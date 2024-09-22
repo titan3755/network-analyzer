@@ -8,6 +8,9 @@ import (
 	"netzer/utils"
 )
 
+// this function sets the ip_file setting in the settings.prp file to the specified directory in order to 
+// use it for analyzing cmds and ping cmds (main_cmd_function)
+
 func UseIPFileMain(c *cli.Context) error {
 	utils.IPIntro()
 	pterm.Info.Println("Using IP file...")
@@ -24,6 +27,9 @@ func UseIPFileMain(c *cli.Context) error {
 	pterm.Success.Println("IP file used successfully!")
 	return nil
 }
+
+// this function sets the ip_file setting in the settings.prp file to the specified directory in order to
+// use it for analyzing cmds and ping cmds
 
 func useIPFile(filePath string) error {
 	// check if file exists

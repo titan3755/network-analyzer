@@ -2,13 +2,16 @@ package ping
 
 import (
 	"fmt"
-	"net"
 	"netzer/utils"
 	"strings"
 	"time"
 	"github.com/pterm/pterm"
 	"github.com/urfave/cli/v2"
+	"os"
+	"os/signal"
 )
+
+// this function pings a specified IP address (main_cmd_function)
 
 func PingMain(c *cli.Context) error {
 	utils.PingIntro()
@@ -20,10 +23,22 @@ func PingMain(c *cli.Context) error {
 	var latency_list []float64
 	var highest_latency float64
 	var lowest_latency float64
+	var pinger_run bool = true
 	area, _ := pterm.DefaultArea.Start()
-	for {
-		latency := PingSpecificIP(c.Args().Get(0))
-		if strings.Contains(latency, "Error") {
+	ctrl_intr := make(chan os.Signal, 1)
+	signal.Notify(ctrl_intr, os.Interrupt)
+	go func() {
+		for range ctrl_intr {
+			pinger_run = false
+			area.Clear()
+			pterm.Info.Printf("\nTotal pings sent: %d\nAverage latency: %s\nHighest latency: %dms\nLowest latency: %dms\nExiting pinger ...", count_loop, time.Duration(average_latency) * time.Millisecond, int(highest_latency), int(lowest_latency))
+		}
+	}()
+	for pinger_run {
+		latency, errt := utils.ICMP_Ping(c.Args().Get(0))
+		if errt != nil {
+			area.Update(pterm.Error.Sprintf("Error: %v", errt))
+		} else if strings.Contains(latency, "Error") {
 			area.Update(pterm.Error.Sprintf("Error: %s", latency))
 		} else {
 			count_loop++
@@ -37,18 +52,5 @@ func PingMain(c *cli.Context) error {
 		}
 		time.Sleep(time.Second / 2)
 	}
-	// return nil
-}
-
-func PingSpecificIP(ip string) string {
-	var latency string
-	startTime := time.Now()
-    conn, err := net.Dial("tcp", ip)
-    if err != nil {
-		latency = fmt.Sprintf("Error: %v", err)
-		return latency
-    }
-    defer conn.Close()
-	latency = fmt.Sprintf("%v", time.Since(startTime))
-	return latency
+	return nil
 }

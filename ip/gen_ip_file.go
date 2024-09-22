@@ -8,6 +8,8 @@ import (
 	"fmt"
 )
 
+// this function generates an IP file in the specified directory (main_cmd_function)
+
 func IPFileGeneratorMain(c *cli.Context) error {
 	utils.IPIntro()
 	pterm.Info.Println(fmt.Sprintf("Generating IP file at %v", c.Args().First()))
@@ -28,6 +30,8 @@ func IPFileGeneratorMain(c *cli.Context) error {
 	pterm.Success.Println("IP file generated successfully!")
 	return nil
 }
+
+// this function generates an IP file in the specified directory
 
 func ipFileGenerator(path string, fileName string) error {
 	file, err := os.Create(path + "/" + fileName + ".ip")

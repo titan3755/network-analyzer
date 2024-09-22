@@ -5,6 +5,8 @@ import (
 	"errors"
 )
 
+// this function checks if a file is empty or not
+
 func FileEmptyCheck(fileName string) (bool, error) {
 	// check if file exists
 	if _, err := os.Stat(fileName); os.IsNotExist(err) {

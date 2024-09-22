@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+// SetSettings is a function that sets a setting in the settings.prp file
+
 func SetSettings(setting string, property string) error {
 	// open and read file at location
 	file, err := os.OpenFile("settings.prp", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
@@ -19,6 +21,8 @@ func SetSettings(setting string, property string) error {
 	}
 	return nil
 }
+
+// GetSettings is a function that gets a setting from the settings.prp file
 
 func GetSettings(setting string) (string, error) {
 	// open and read file at location
@@ -39,6 +43,8 @@ func GetSettings(setting string) (string, error) {
 	}
 	return "", fmt.Errorf("setting not found")
 }
+
+// ReadSettings is a function that reads the settings from the settings.prp file
 
 func ReadSettings(fileName string) map[string]string {
 	// open and read file at location

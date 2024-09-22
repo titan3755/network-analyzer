@@ -9,6 +9,9 @@ import (
 	"errors"
 )
 
+// this function reads the settings.prp file which exists in the same directory and then it
+// prints the settings to the console or terminal
+
 func ShowSettingsMain(c *cli.Context) error {
 	utils.BasicIntro()
 	// check if settings file exists

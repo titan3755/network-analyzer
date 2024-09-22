@@ -9,6 +9,8 @@ import (
 	"strings"
 )
 
+// this function removes a single IP address from a file (main_cmd_function)
+
 func RemoveSingleIPFromFileMain(c *cli.Context) error {
 	utils.IPIntro()
 	pterm.Info.Println(fmt.Sprintf("Removing IP address %v from the list...", c.Args().Get(1)))
@@ -29,6 +31,8 @@ func RemoveSingleIPFromFileMain(c *cli.Context) error {
 	pterm.Success.Println("IP address removed successfully!")
 	return nil
 }
+
+// this function removes multiple IP addresses from a file (main_cmd_function)
 
 func RemoveMultipleIPFromFileMain(c *cli.Context) error {
 	utils.IPIntro()
@@ -67,6 +71,8 @@ func RemoveMultipleIPFromFileMain(c *cli.Context) error {
 	pterm.Success.Println("IP addresses removed successfully!")
 	return nil
 }
+
+// this function removes a single IP address from a file
 
 func removeIPFromFile(ip string, fileLocation string) error {
 	// check if file exists
@@ -113,6 +119,8 @@ func removeIPFromFile(ip string, fileLocation string) error {
 	}
 	return fmt.Errorf("ip address not in file")
 }
+
+// this function removes multiple IP addresses from a file
 
 func removeMultipleIPFromFile(ipConvFormat string, location string) error {
 	// check if file exists

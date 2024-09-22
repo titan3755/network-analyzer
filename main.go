@@ -11,6 +11,9 @@ import (
 	"github.com/urfave/cli/v2" // imports as package "cli"
 )
 
+// preChecks function checks if the settings file exists and if not, creates it
+// it also checks other pre-requisites
+
 func preChecks() {
 	err := utils.SettingsFile()
 	if err != nil {
@@ -26,6 +29,8 @@ func preChecks() {
 		}
 	}
 }
+
+// mainApp function is the main function for the application
 
 func mainApp() {
 	app := &cli.App{
@@ -150,6 +155,8 @@ func mainApp() {
 		log.Fatal(err)
 	}
 }
+
+// main function
 
 func main()  {
 	preChecks()

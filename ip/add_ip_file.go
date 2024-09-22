@@ -8,6 +8,8 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+// this function adds a single IP address to a file (main_cmd_function)
+
 func AddSingleIPToFileMain(c *cli.Context) error {
 	utils.IPIntro()
 	pterm.Info.Println(fmt.Sprintf("Adding IP address %v to the list...", c.Args().Get(1)))
@@ -28,6 +30,8 @@ func AddSingleIPToFileMain(c *cli.Context) error {
 	pterm.Success.Println("IP address added successfully!")
 	return nil
 }
+
+// this function adds multiple IP addresses to a file (main_cmd_function)
 
 func AddMultipleIPToFileMain(c *cli.Context) error {
 	utils.IPIntro()
@@ -61,6 +65,8 @@ func AddMultipleIPToFileMain(c *cli.Context) error {
 	pterm.Success.Println("IP addresses added successfully!")
 	return nil
 }
+
+// this function adds multiple IP addresses to a file
 
 func addMultipleIPToFile(ipConvFormat string, location string) error {
 	// check if file format is valid if file is not empty
@@ -98,6 +104,7 @@ func addMultipleIPToFile(ipConvFormat string, location string) error {
 	return nil
 }
 
+// this function adds a single IP address to a file
 
 func addIPToFile(ip string, location string) error {
 	// check if file format is valid if file is not empty

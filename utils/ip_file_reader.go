@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+// IpFileReader is a function that reads a file containing a list of IP addresses and returns a list of IP addresses
+
 func IpFileReader(fileName string) ([]string, error) {
 	// check if file exists
 	if _, err := os.Stat(fileName); os.IsNotExist(err) {

@@ -8,7 +8,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-// at first, check if the content of the ip file is valid, then check if duplicate ip addresses are in file, then read the ip addresses, parse them and display in the console using pterm
+// this function reads IP addresses from a file after checking its validity (main_cmd_function)
 func ReadIPFromFileMain(c *cli.Context) error {
 	utils.IPIntro()
 	pterm.Info.Println(fmt.Sprintf("Reading IP addresses from file at %v ...", c.Args().First()))
@@ -33,6 +33,8 @@ func ReadIPFromFileMain(c *cli.Context) error {
 	}
 	return nil
 }
+
+// this function reads IP addresses from a file after checking its validity
 
 func readIPFromFile(filePath string) ([]string, error) {
 	// check if file exists
