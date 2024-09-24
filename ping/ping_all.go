@@ -3,6 +3,10 @@ package ping
 import (
 	"fmt"
 	"netzer/utils"
+	"slices"
+	"strconv"
+	"time"
+
 	"github.com/pterm/pterm"
 	"github.com/urfave/cli/v2"
 )
@@ -28,47 +32,50 @@ func PingAllMain(c *cli.Context) error {
 		pterm.Info.Println(fmt.Sprintf("%v. %v \n", no+1, ip))
 	}
 	pterm.Info.Println("Pinging IPs ...")
-	// gor_ip_latency := make(chan string)
-	// wg := &sync.WaitGroup{}
-	// for _, ip := range ip_list {
-	// 	wg.Add(1)
-	// 	go func(ip string) {
-	// 		defer wg.Done()
-	// 		var latency string = ""
-	// 		startTime := time.Now()
-	// 		conn, err := net.Dial("tcp", ip)
-	// 		if err != nil {
-	// 			latency = fmt.Sprintf("Error: %v", err)
-	// 			gor_ip_latency <- latency
-	// 		}
-	// 		go func() {
-	// 			time.Sleep(2 * time.Second)
-	// 			if latency == "" || !strings.Contains(latency, "Error") {
-	// 				latency = "Error: Timeout"
-	// 				gor_ip_latency <- latency
-	// 				wg.Done()
-	// 			}
-	// 		}()
-	// 		defer conn.Close()
-	// 		latency = fmt.Sprintf("%v", time.Since(startTime))
-	// 		log.Default().Printf("Latency: %s, IP: %s\n", latency, ip)
-	// 		gor_ip_latency <- latency
-	// 	}(ip)
-	// }
-	// go func() {
-	// 	wg.Wait()
-	// 	close(gor_ip_latency)
-	// }()
-	// for latency := range gor_ip_latency {
-	// 	if strings.Contains(latency, "Error") {
-	// 		pterm.Error.Println(fmt.Sprintf("Error: %s", latency))
-	// 	} else {
-	// 		pterm.Success.Println(fmt.Sprintf("Latency: %s", latency))
-	// 	}
-	// }
-	return nil
+	fmt.Print("\n\n")
+	area, _ := pterm.DefaultArea.Start()
+	comms := make(chan []string)
+	defer area.Stop()
+	for {
+		// use icmp_ping_concurrent to ping all the IPs
+		// use a channel to communicate with the function
+		// print the results
+		// stop the function when all IPs are pinged
+		for _, ip := range ip_list {
+			go utils.ICMP_Ping_Concurrent(ip, comms)
+		}
+		var areaUpdateStr string
+		var ip_up_list []string
+		msg := <- comms
+		go func() {
+			go func () {
+				for {
+					time.Sleep(time.Second * 2)
+					if len(ip_up_list) == len(ip_list) {
+						areaUpdateStr = ""
+						ip_up_list = []string{}
+					}
+				}
+			}()
+			for {
+				msg = <- comms
+				if !slices.Contains(ip_up_list, msg[6]) && slices.Contains(ip_list, msg[6]) {
+					// add to ip_up_list and update areaUpdateStr
+					ip_up_list = append(ip_up_list, msg[6])
+					highest, _ := strconv.Atoi(msg[2])
+					lowest, _ := strconv.Atoi(msg[3])
+					areaUpdateStr += pterm.Info.Sprintf("IP: %s\nLatency: %s\nAverage: %s\nHighest: %dms\nLowest: %dms\n\n", msg[6], msg[0], msg[1], highest, lowest)
+				}
+			}
+		}()
+		for {
+			msg = <- comms
+			if msg[0] == "stop" {
+				break
+			}
+			// area text generator
+			area.Update(areaUpdateStr)
+			time.Sleep(time.Second / 2)
+		}
+	}
 }
-
-// func pingAll() {
-	
-// }
