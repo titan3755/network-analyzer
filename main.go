@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"netzer/analyzers"
 	"netzer/basic"
 	"netzer/ip"
 	"netzer/ping"
@@ -107,23 +108,29 @@ func mainApp() {
 				Usage: "read the IP file and display the IP addresses",
 				Action: ip.ReadIPFromFileMain,
 			},
+			// {
+			// 	Name: "analyzer",
+			// 	Aliases: []string{"a"},
+			// 	Usage: "netzer analyzer utility",
+			// 	Action: analyzers.AnalyzerMain,
+			// },
 			{
 				Name: "stability-analysis",
 				Aliases: []string{"sa"},
 				Usage: "analyze network stability",
-				Action: analyzeNetworkStability,
+				Action: analyzers.StabilityAnalyzerMain,
 			},
 			{
 				Name: "full-analysis",
 				Aliases: []string{"fa"},
 				Usage: "perform a full network analysis",
-				Action: fullNetworkAnalysis,
+				Action: analyzers.StabilityAnalyzerFullMain,
 			},
 			{
 				Name: "long-term-analysis",
 				Aliases: []string{"la"},
 				Usage: "perform a long term network analysis",
-				Action: analyzeNetworkStabilityLT,
+				Action: analyzers.StabilityAnalyzerLongMain,
 			},
 			{
 				Name: "speed-test",
@@ -165,22 +172,7 @@ func main()  {
 
 // placeholder functions
 
-func analyzeNetworkStability(c *cli.Context) error {
-	println("Analyzing network stability")
-	return nil
-}
-
-func fullNetworkAnalysis(c *cli.Context) error {
-	println("Performing a full network analysis")
-	return nil
-}
-
 func speedTest(c *cli.Context) error {
 	println("Performing a speed test")
-	return nil
-}
-
-func analyzeNetworkStabilityLT(c *cli.Context) error {
-	println("Performing a long term network analysis")
 	return nil
 }
