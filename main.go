@@ -117,7 +117,7 @@ func mainApp() {
 			{
 				Name: "stability-analysis",
 				Aliases: []string{"sa"},
-				Usage: "analyze network stability",
+				Usage: "perform a short network analysis",
 				Action: analyzers.StabilityAnalyzerMain,
 			},
 			{
@@ -129,7 +129,7 @@ func mainApp() {
 			{
 				Name: "long-term-analysis",
 				Aliases: []string{"la"},
-				Usage: "perform a long term network analysis",
+				Usage: "perform a lengthy network analysis",
 				Action: analyzers.StabilityAnalyzerLongMain,
 			},
 			{

@@ -1,8 +1,9 @@
 package utils
 
 import (
+	"fmt"
+	"time"
 	probing "github.com/prometheus-community/pro-bing"
-	"strconv"
 )
 
 // ICMP_Ping is a function that sends an ICMP echo request to the specified host
@@ -22,36 +23,46 @@ func ICMP_Ping(host string) (latency string, er error) {
 	return stats, nil
 }
 
-func ICMP_Ping_Concurrent(host string, commsChannel chan []string) {
-	var running bool = true
-	pinger, err := probing.NewPinger(host)
-	pinger.SetPrivileged(true)
-	if err != nil {
-		return
+func ICMP_Ping_Concurrent(hostList []string, ping_time int) (map[string][][]string, map[string][]error) {
+	var comms chan []string = make(chan []string)
+	var raw_data_final map[string][][]string = make(map[string][][]string)
+	var errors map[string][]error = make(map[string][]error)
+	for _, host := range hostList {
+		go func(hostF string) {
+			pinger, err := probing.NewPinger(hostF)
+			pinger.SetPrivileged(true)
+			if err != nil {
+				errors[hostF] = append(errors[hostF], err)
+			}
+			go func() {
+				erns := pinger.Run()
+				if erns != nil {
+					errors[hostF] = append(errors[hostF], erns)
+				}
+			}()
+			go func() {
+				for {
+					stt := pinger.Statistics()
+					stats := []string{
+						hostF,
+						stt.AvgRtt.String(),
+						stt.MaxRtt.String(),
+						stt.MinRtt.String(),
+						fmt.Sprintf("%v", stt.PacketsSent),
+						fmt.Sprintf("%v", stt.PacketsRecv),
+						fmt.Sprintf("%v", stt.PacketLoss),
+					}
+					comms <- stats
+					time.Sleep(time.Second / 20)
+				}
+			}()
+		}(host)
 	}
-	go func() {
-		erns := pinger.Run()
-		if erns != nil {
-			commsChannel <- []string{"stop"}
-			return
+	go func () {
+		for stats := range comms {
+			raw_data_final[stats[0]] = [][]string{stats}
 		}
 	}()
-	for running {
-		stats := pinger.Statistics()
-		strStatList := []string{
-			stats.AvgRtt.String(),
-			stats.MaxRtt.String(),
-			stats.MinRtt.String(),
-			strconv.FormatInt(int64(stats.PacketsSent), 10),
-			strconv.FormatInt(int64(stats.PacketsRecv), 10),
-			strconv.FormatInt(int64(stats.PacketLoss), 10),
-			stats.IPAddr.String(),
-		}
-		commsChannel <- strStatList
-		// msg := <- commsChannel
-		// if msg[0] == "stop" {
-		// 	running = false
-		// }
-	}
+	time.Sleep(time.Second * time.Duration(ping_time))
+	return raw_data_final, errors
 }
-

@@ -26,7 +26,7 @@ func PingMain(c *cli.Context) error {
 	var pinger_run bool = true
 	area, _ := pterm.DefaultArea.Start()
 	ctrl_intr := make(chan os.Signal, 1)
-	signal.Notify(ctrl_intr, os.Interrupt)
+	signal.Notify(ctrl_intr, os.Interrupt) // listen for interrupt signal (ctrl+c)
 	go func() {
 		for range ctrl_intr {
 			pinger_run = false
