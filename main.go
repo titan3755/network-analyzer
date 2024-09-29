@@ -7,8 +7,8 @@ import (
 	"netzer/ip"
 	"netzer/ping"
 	"netzer/utils"
+	"netzer/speedtest"
 	"os"
-
 	"github.com/urfave/cli/v2" // imports as package "cli"
 )
 
@@ -136,7 +136,7 @@ func mainApp() {
 				Name: "speed-test",
 				Aliases: []string{"st"},
 				Usage: "perform a speed test",
-				Action: speedTest,
+				Action: speedtest.SpeedTestMain,
 			},
 			{
 				Name: "help",
@@ -168,11 +168,4 @@ func mainApp() {
 func main()  {
 	preChecks()
 	mainApp()
-}
-
-// placeholder functions
-
-func speedTest(c *cli.Context) error {
-	println("Performing a speed test")
-	return nil
 }

@@ -57,3 +57,14 @@ func BasicIntro() {
 	pterm.Info.Println("This utility allows you to view and modify basic settings and execute other simple commands.")
 	fmt.Println()
 }
+
+func SpeedTestIntro() {
+	ResetTerminal()
+	pterm.DefaultBigText.WithLetters(
+		putils.LettersFromStringWithStyle("NetZer  ", pterm.FgCyan.ToStyle()),
+		putils.LettersFromStringWithStyle("SpeedTest", pterm.FgLightMagenta.ToStyle()),
+	).Render()
+	pterm.Info.Println("Welcome to NetZer SpeedTest!")
+	pterm.Info.Println("This utility allows you to test the speed of your network.")
+	fmt.Println()
+}

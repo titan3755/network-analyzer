@@ -6,6 +6,7 @@ require (
 	github.com/inancgumus/screen v0.0.0-20190314163918-06e984b86ed3
 	github.com/prometheus-community/pro-bing v0.4.1
 	github.com/pterm/pterm v0.12.79
+	github.com/showwin/speedtest-go v1.7.9
 	github.com/urfave/cli/v2 v2.27.4
 )
 
