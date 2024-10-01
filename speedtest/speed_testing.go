@@ -10,13 +10,22 @@ import (
 
 func SpeedTestMain(c *cli.Context) error {
 	utils.SpeedTestIntro()
-	pterm.Info.Println("Starting speed test ... [powered by speedtest.net]")
+	pterm.Info.Println("Starting quick speed test to domestic server ... [powered by speedtest.net]")
 	pterm.Info.Println("[Go API by showwin (https://github.com/showwin/speedtest-go)]")
 	fmt.Print("\n\n")
+	spnrInfo, _ := pterm.DefaultSpinner.Start("Performing speed test ...")
 	var speed_tester = st.New()
 	serverLst, _ := speed_tester.FetchServers()
 	trgts, _ := serverLst.FindServer([]int{})
 	for _, srvr := range trgts {
+		go func () {
+			for {
+				if srvr.Latency.String() != "" {
+					spnrInfo.Stop()
+					break
+				}
+			}
+		}()
 		srvr.PingTest(nil)
 		srvr.DownloadTest()
 		srvr.UploadTest()

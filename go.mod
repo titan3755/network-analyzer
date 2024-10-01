@@ -3,6 +3,7 @@ module netzer
 go 1.23.0
 
 require (
+	github.com/aquasecurity/table v1.8.0
 	github.com/inancgumus/screen v0.0.0-20190314163918-06e984b86ed3
 	github.com/prometheus-community/pro-bing v0.4.1
 	github.com/pterm/pterm v0.12.79

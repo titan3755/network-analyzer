@@ -68,3 +68,14 @@ func SpeedTestIntro() {
 	pterm.Info.Println("This utility allows you to test the speed of your network.")
 	fmt.Println()
 }
+
+func DBStatisticsTableIntro() {
+	ResetTerminal()
+	pterm.DefaultBigText.WithLetters(
+		putils.LettersFromStringWithStyle("NetZer  ", pterm.FgCyan.ToStyle()),
+		putils.LettersFromStringWithStyle("Statistics", pterm.FgLightMagenta.ToStyle()),
+	).Render()
+	pterm.Info.Println("Welcome to NetZer Statistics!")
+	pterm.Info.Println("This utility allows you to view statistics of the database.")
+	fmt.Println()
+}
