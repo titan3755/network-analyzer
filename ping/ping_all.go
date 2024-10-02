@@ -75,26 +75,3 @@ func PingAllMain(c *cli.Context) error {
 	// statistics table area ---
 	return nil
 }
-
-// for ip, data := range ip_map_main {
-// 	pterm.Info.Println(fmt.Sprintf("\nIP: %s", ip))
-// 	latest := data[len(data)-1]
-// 	avgRTT := latest[1]
-// 	maxRTT := latest[2]
-// 	minRTT := latest[3]
-// 	pktSent := latest[4]
-// 	pktRecv := latest[5]
-// 	pktLoss := latest[6]
-// 	pterm.Info.Println(fmt.Sprintf("Average RTT: %s", avgRTT))
-// 	pterm.Info.Println(fmt.Sprintf("Max RTT: %s", maxRTT))
-// 	pterm.Info.Println(fmt.Sprintf("Min RTT: %s", minRTT))
-// 	pterm.Info.Println(fmt.Sprintf("Packets Sent: %s", pktSent))
-// 	pterm.Info.Println(fmt.Sprintf("Packets Received: %s", pktRecv))
-// 	pterm.Info.Println(fmt.Sprintf("Packet Loss: %s", pktLoss))
-// }
-// for ip, errs := range errors {
-// 	pterm.Error.Println(fmt.Sprintf("IP: %s", ip))
-// 	for _, err_ := range errs {
-// 		pterm.Error.Println(fmt.Sprintf("Error: %v", err_))
-// 	}
-// }

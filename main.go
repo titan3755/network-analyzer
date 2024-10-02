@@ -133,10 +133,10 @@ func mainApp() {
 				Action: analyzers.StabilityAnalyzerLongMain,
 			},
 			{
-				Name: "speed-test",
-				Aliases: []string{"st"},
+				Name: "speed-test-local",
+				Aliases: []string{"stl"},
 				Usage: "perform a speed test",
-				Action: speedtest.SpeedTestMain,
+				Action: speedtest.SpeedTestLocalMain,
 			},
 			{
 				Name: "help",

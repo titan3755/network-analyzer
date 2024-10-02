@@ -3,7 +3,6 @@ package utils
 import (
 	"fmt"
 	"os"
-
 	tb "github.com/aquasecurity/table"
 )
 
@@ -23,13 +22,18 @@ func StatisticsTableCreatorForPingAll(ip_map map[string][][]string, error_map ma
 		tableIP.AddRow(ip, pktSent, pktRecv, pktLoss, minRTT, maxRTT, avgRTT)
 	}
 	tableIP.Render()
+	var noErr bool = true
 	tableErr := tb.New(os.Stdout)
 	tableErr.SetHeaders("IP Address", "Error")
 	tableErr.SetAlignment(tb.AlignCenter)
 	for ip, errs := range error_map {
 		for _, err := range errs {
+			noErr = false
 			tableErr.AddRow(ip, fmt.Sprintf("%s", err))
 		}
+	}
+	if noErr {
+		tableErr.AddRow("No errors", "No errors")
 	}
 	tableErr.Render()
 }
