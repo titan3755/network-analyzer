@@ -49,8 +49,8 @@ func mainApp() {
 			// 	Action: ping.PingMain,
 			// },
 			{
-				Name: "ping-all",
-				Aliases: []string{"pa"},
+				Name: "ping-all-ip",
+				Aliases: []string{"pai"},
 				Usage: "ping all servers in the IP list",
 				Action: ping.PingAllMain,
 			},
@@ -135,8 +135,14 @@ func mainApp() {
 			{
 				Name: "speed-test-local",
 				Aliases: []string{"stl"},
-				Usage: "perform a speed test",
+				Usage: "perform a speed test with respect to a domestic/local server",
 				Action: speedtest.SpeedTestLocalMain,
+			},
+			{
+				Name: "speed-test-global",
+				Aliases: []string{"stg"},
+				Usage: "perform a speed test with respect to any server in the world",
+				Action: speedtest.SpeedTestGlobalMain,
 			},
 			{
 				Name: "help",

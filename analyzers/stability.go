@@ -2,7 +2,6 @@ package analyzers
 
 import (
 	"netzer/utils"
-
 	"github.com/pterm/pterm"
 	"github.com/urfave/cli/v2"
 )
