@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"netzer/data"
 	tb "github.com/aquasecurity/table"
 	pterm "github.com/pterm/pterm"
 )
@@ -43,6 +44,9 @@ func StatisticsTableCreatorForPingAll(ip_map map[string][][]string, error_map ma
 func StatisticsTableCreatorForStabilityAnalyzer(ip_map map[string][][]string, error_map map[string][]error) {
 	DBStatisticsTableIntro()
 	var ipIndividualStabilityGradeData map[string]string = make(map[string]string)
+	fmt.Print("\n")
+	pterm.Info.Println("Ping statistics for the IP addresses:")
+	fmt.Print("\n")
 	// ping stats
 	tableIP := tb.New(os.Stdout)
 	tableIP.SetHeaders("IP Address", "Packets Sent", "Packets Received", "Packet Loss", "Min RTT", "Max RTT", "Avg RTT")
@@ -59,6 +63,10 @@ func StatisticsTableCreatorForStabilityAnalyzer(ip_map map[string][][]string, er
 	}
 	tableIP.Render()
 	var noErr bool = true
+	fmt.Print("\n")
+	pterm.Info.Println("Error messages for the IP addresses:")
+	fmt.Print("\n")
+	// error stats
 	tableErr := tb.New(os.Stdout)
 	tableErr.SetHeaders("IP Address", "Error")
 	tableErr.SetAlignment(tb.AlignCenter)
@@ -72,6 +80,9 @@ func StatisticsTableCreatorForStabilityAnalyzer(ip_map map[string][][]string, er
 		tableErr.AddRow("No errors", "No errors")
 	}
 	tableErr.Render()
+	fmt.Print("\n")
+	pterm.Info.Println("Stability statistics for the IP addresses:")
+	fmt.Print("\n")
 	// stability stats
 	tableStab := tb.New(os.Stdout)
 	tableStab.SetHeaders("IP Address", "Recv/Sent %", "\u0394Ping", "Avg", "Stability Grade")
@@ -124,5 +135,23 @@ func StatisticsTableCreatorForStabilityAnalyzer(ip_map map[string][][]string, er
 	tableStab.Render()
 	// stability grade
 	overallStabilityGrade := CalculateOverallStabilityGrade(ipIndividualStabilityGradeData)
-	pterm.Info.Println("\nOverall stability grade:", overallStabilityGrade)
+	fmt.Print("\n")
+	pterm.Info.Println("The stability grade is calculated according to the following table:")
+	fmt.Print("\n")
+	// stability grade table
+	tableStabGradeDemonstration := tb.New(os.Stdout)
+	tableStabGradeDemonstration.SetHeaders("Stability Grade", "Description")
+	tableStabGradeDemonstration.SetAlignment(tb.AlignCenter)
+	for i := 0; i <= 9; i++ {
+		tableStabGradeDemonstration.AddRow(data.StabilityGrade[i], data.StabilityGradeDescription[data.StabilityGrade[i]])
+	}
+	tableStabGradeDemonstration.Render()
+	fmt.Print("\n")
+	pterm.Info.Println("Overall Network Stability Grade:", overallStabilityGrade)
+	// graph confirmation
+	fmt.Print("\n")
+	res, _ := pterm.DefaultInteractiveConfirm.WithDefaultText("Do you want to see the stability grade graph?").WithConfirmText("Yes").Show()
+	if res {
+		GenerateStabilityGradeGraph(ipIndividualStabilityGradeData)
+	}
 }

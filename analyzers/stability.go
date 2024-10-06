@@ -6,6 +6,7 @@ import (
 	"netzer/data"
 	"github.com/pterm/pterm"
 	"github.com/urfave/cli/v2"
+	"fmt"
 )
 
 func StabilityAnalyzerMain(c *cli.Context) error {
@@ -40,10 +41,18 @@ func StabilityAnalyzerMain(c *cli.Context) error {
 	for _, ipl := range longIPList {
 		mergedIPList = append(mergedIPList, ipl...)
 	}
-	pterm.Info.Println("The following IP addresses will be tested:")
-	for _, ip := range mergedIPList {
-		pterm.Info.Println(ip)
+	pterm.Info.Println("The following hosts will be tested:")
+	fmt.Print("\n")
+	for _, host := range data.StabilityTestAddrList {
+		fmt.Printf("[%s]", host)
 	}
+	fmt.Print("\n\n")
+	pterm.Info.Println("The following IP addresses will be tested:")
+	fmt.Print("\n")
+	for _, ip := range data.StabilityTestIPList {
+		fmt.Printf("[%s]", ip)
+	}
+	fmt.Print("\n\n")
 	pterm.Info.Println("Starting the stability test ...")
 	go func() {
 		spnrInfo, _ := pterm.DefaultSpinner.Start("Performing stability test ...")

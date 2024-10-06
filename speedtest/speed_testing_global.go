@@ -5,7 +5,6 @@ import (
 	"netzer/utils"
 	"slices"
 	"strconv"
-
 	"github.com/pterm/pterm"
 	st "github.com/showwin/speedtest-go/speedtest"
 	"github.com/urfave/cli/v2"

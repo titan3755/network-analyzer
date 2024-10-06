@@ -30,3 +30,16 @@ var StabilityTestIPList []string = []string{
 }
 
 var StabilityGrade []string = []string{"A", "B", "C", "D", "F", "G", "H", "I", "J", "K"}
+
+var StabilityGradeDescription map[string]string = map[string]string{
+	"A": "Perfect",
+	"B": "Excellent",
+	"C": "Very Good",
+	"D": "Good",
+	"F": "Fair",
+	"G": "Poor",
+	"H": "Very Poor",
+	"I": "Bad",
+	"J": "Very Bad",
+	"K": "Worst",
+}

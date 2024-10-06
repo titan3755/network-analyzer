@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"math"
 	"netzer/data"
 	"strconv"
 )
@@ -136,7 +137,7 @@ func CalculateStabilityGrade(psent, precv, ploss, minrtt, maxrtt, avgrtt string)
 			break
 		}
 	}
-	indexNo := int(float64(total) / 3)
+	indexNo := math.Ceil(float64(total) / 3)
 	if indexNo > 10 {
 		indexNo = 10
 	} else if indexNo < 1 {
@@ -164,7 +165,7 @@ func CalculateOverallStabilityGrade(ipData map[string]string) string {
 	if count == 0 {
 		return "N/A"
 	}
-	indexNo := int(total / float64(count))
+	indexNo := math.Ceil(total / float64(count))
 	if indexNo > 10 {
 		indexNo = 10
 	} else if indexNo < 1 {

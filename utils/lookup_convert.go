@@ -14,6 +14,10 @@ func ConvertListOfHostsToIPs(hosts []string) (map[string][]string, []error) {
 	return ips, errors
 }
 
+func ConvertSingleHostToIPs(host string) ([]string, error) {
+	return LookupHostIP(host)
+}
+
 func ConvertListOfIpsToHosts(ips []string) (map[string][]string, []error) {
 	var hosts map[string][]string = make(map[string][]string)
 	var errors []error
@@ -26,4 +30,8 @@ func ConvertListOfIpsToHosts(ips []string) (map[string][]string, []error) {
 		hosts[ip] = host
 	}
 	return hosts, errors
+}
+
+func ConvertSingleIPToHosts(ip string) ([]string, error) {
+	return LookupAddrHost(ip)
 }
