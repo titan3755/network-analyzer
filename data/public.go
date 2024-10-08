@@ -43,3 +43,8 @@ var StabilityGradeDescription map[string]string = map[string]string{
 	"J": "Very Bad",
 	"K": "Worst",
 }
+
+var AvailableSettings []string = []string{
+	"ip_file",
+	"output_location",
+}

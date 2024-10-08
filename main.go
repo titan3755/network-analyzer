@@ -158,9 +158,15 @@ func mainApp() {
 			},
 			{
 				Name: "show-settings",
-				Aliases: []string{"ss"},
+				Aliases: []string{"shs"},
 				Usage: "show settings",
 				Action: basic.ShowSettingsMain,
+			},
+			{
+				Name: "set-settings",
+				Aliases: []string{"sts"},
+				Usage: "set settings",
+				Action: basic.SetSettingsMain,
 			},
 		},
 	}

@@ -1,8 +1,9 @@
 package utils
 
 import (
-	"os"
 	"fmt"
+	"log"
+	"os"
 	"strings"
 )
 
@@ -15,6 +16,27 @@ func SetSettings(setting string, property string) error {
 		return err
 	}
 	defer file.Close()
+	// delete previous instance of setting
+	dataString, erros := os.ReadFile("settings.prp")
+	if erros != nil {
+		return erros
+	}
+	nString := string(dataString)
+	resList := strings.Split(nString, "\n")
+	finalLst := []string{}
+	for _, line := range resList {
+		if strings.Contains(line, setting) {
+			continue
+		}
+		finalLst = append(finalLst, line)
+	}
+	for _, line := range finalLst {
+		_, err := file.WriteString(line + "\n")
+		if err != nil {
+			return err
+		}
+	}
+	// write new setting
 	_, err = file.WriteString(setting + "=" + property + "\n")
 	if err != nil {
 		return err
@@ -44,12 +66,21 @@ func GetSettings(setting string) (string, error) {
 	return "", fmt.Errorf("setting not found")
 }
 
+func WipeSettings() error {
+	// open and read file at location
+	if err := os.Truncate("settings.prp", 0); err != nil {
+		return err
+	}
+	return nil
+}
+
 // ReadSettings is a function that reads the settings from the settings.prp file
 
 func ReadSettings(fileName string) map[string]string {
 	// open and read file at location
 	file, err := os.Open(fileName)
 	if err != nil {
+		log.Fatal(err)
 		return nil
 	}
 	defer file.Close()
