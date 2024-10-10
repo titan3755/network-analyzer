@@ -168,6 +168,12 @@ func mainApp() {
 				Usage: "set settings",
 				Action: basic.SetSettingsMain,
 			},
+			{
+				Name: "wipe-settings",
+				Aliases: []string{"sws"},
+				Usage: "wipe settings",
+				Action: basic.WipeSettingsMain,
+			},
 		},
 	}
 	if err := app.Run(os.Args); err != nil {

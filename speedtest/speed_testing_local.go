@@ -8,6 +8,8 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+// SpeedTestLocalMain function is the main function for the local speed test
+
 func SpeedTestLocalMain(c *cli.Context) error {
 	utils.SpeedTestIntro()
 	var spinnerOn bool = true

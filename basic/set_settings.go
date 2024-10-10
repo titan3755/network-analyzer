@@ -14,7 +14,7 @@ func SetSettingsMain(c *cli.Context) error {
 	fmt.Print("\n")
 	file := utils.ReadSettings(settingFile)
 	if file == nil {
-		pterm.Error.Println(fmt.Sprintf("Error: %v", fmt.Errorf("could not read settings file")))
+		pterm.Error.Println(fmt.Sprintf("Error: %v", fmt.Errorf("something wrong with settings file or file empty")))
 		return fmt.Errorf("could not read settings file")
 	}
 	pterm.Info.Println("Settings file read successfully. Output -->")
@@ -24,9 +24,7 @@ func SetSettingsMain(c *cli.Context) error {
 	fmt.Print("\n")
 	possibleSettings := data.AvailableSettings
 	var optionsSettings []string
-	for _, setting := range possibleSettings {
-		optionsSettings = append(optionsSettings, setting)
-	}
+	optionsSettings = append(optionsSettings, possibleSettings...)
 	pterm.Info.Println("Available settings:")
 	fmt.Print("\n")
 	selectedOptionSetting, _ := pterm.DefaultInteractiveSelect.WithOptions(optionsSettings).Show()

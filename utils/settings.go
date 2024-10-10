@@ -3,6 +3,7 @@ package utils
 import (
 	"fmt"
 	"log"
+	"netzer/data"
 	"os"
 	"strings"
 )
@@ -10,36 +11,31 @@ import (
 // SetSettings is a function that sets a setting in the settings.prp file
 
 func SetSettings(setting string, property string) error {
-	// open and read file at location
+	availableSettings := data.AvailableSettings
+	var fileData []string
+	for _, availableSetting := range availableSettings {
+		gtstg, ergst := GetSettings(availableSetting)
+		if ergst != nil {
+			fileData = append(fileData, availableSetting+"="+property)
+			continue
+		}
+		fileData = append(fileData, availableSetting+"="+gtstg)
+	}
+	// wipe settings file
+	if err := WipeSettings(); err != nil {
+		return err
+	}
+	// write new settings
 	file, err := os.OpenFile("settings.prp", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
-	// delete previous instance of setting
-	dataString, erros := os.ReadFile("settings.prp")
-	if erros != nil {
-		return erros
-	}
-	nString := string(dataString)
-	resList := strings.Split(nString, "\n")
-	finalLst := []string{}
-	for _, line := range resList {
-		if strings.Contains(line, setting) {
-			continue
-		}
-		finalLst = append(finalLst, line)
-	}
-	for _, line := range finalLst {
+	for _, line := range fileData {
 		_, err := file.WriteString(line + "\n")
 		if err != nil {
 			return err
 		}
-	}
-	// write new setting
-	_, err = file.WriteString(setting + "=" + property + "\n")
-	if err != nil {
-		return err
 	}
 	return nil
 }
@@ -87,11 +83,54 @@ func ReadSettings(fileName string) map[string]string {
 	var temp string
 	settings := make(map[string]string)
 	for {
+		log.Default().Println(temp)
 		_, err := fmt.Fscan(file, &temp)
 		if err != nil {
 			break
 		}
-		settings[strings.Split(temp, "=")[0]] = strings.Split(temp, "=")[1]
+		// unsafe
+		// settings[strings.Split(temp, "=")[0]] = strings.Split(temp, "=")[1]
+		// unsafe
+		// safe
+		splittings := strings.Split(temp, "=")
+		if len(splittings) < 2 || splittings[0] == "" || splittings[1] == "" {
+			return nil
+		}
+		settings[splittings[0]] = splittings[1]
 	}
 	return settings
 }
+
+	// file, err := os.OpenFile("settings.prp", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
+	// if err != nil {
+	// 	return err
+	// }
+	// defer file.Close()
+	// // delete previous instance of setting
+	// dataString, erros := os.ReadFile("settings.prp")
+	// if erros != nil {
+	// 	return erros
+	// }
+	// nString := string(dataString)
+	// log.Default().Println("ye ye boi")
+	// log.Default().Println(nString)
+	// resList := strings.Split(nString, "\n")
+	// finalLst := []string{}
+	// for _, line := range resList {
+	// 	if strings.Contains(line, setting) {
+	// 		continue
+	// 	}
+	// 	finalLst = append(finalLst, line)
+	// }
+	// for _, line := range finalLst {
+	// 	_, err := file.WriteString(line + "\n")
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// }
+	// // write new setting
+	// _, err = file.WriteString(setting + "=" + property + "\n")
+	// if err != nil {
+	// 	return err
+	// }
+	// return nil

@@ -5,7 +5,6 @@ import (
 	"netzer/utils"
 	"strconv"
 	"time"
-
 	"github.com/pterm/pterm"
 	"github.com/urfave/cli/v2"
 )
@@ -17,6 +16,7 @@ func PingAllMain(c *cli.Context) error {
 	pterm.Info.Println("Reading settings file for IP file location ...")
 	ip_file, err := utils.GetSettings("ip_file")
 	if err != nil {
+		pterm.Error.Println(fmt.Sprintf("Error: %v", err))
 		return err
 	}
 	pterm.Info.Println(fmt.Sprintf("IP file location: %v", ip_file))
@@ -24,6 +24,7 @@ func PingAllMain(c *cli.Context) error {
 	pterm.Info.Println("Reading IP file ...")
 	ip_list, errs := utils.IpFileReader(ip_file)
 	if errs != nil {
+		pterm.Error.Println(fmt.Sprintf("Error: %v", errs))
 		return errs
 	}
 	pterm.Info.Println("Listing IPs found in file ...")

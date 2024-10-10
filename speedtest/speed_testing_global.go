@@ -10,6 +10,8 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+// SpeedTestGlobalMain function is the main function for the global speed test
+
 func SpeedTestGlobalMain(c *cli.Context) error {
 	utils.SpeedTestIntro()
 	var spinnerOn bool = true
@@ -63,5 +65,3 @@ func SpeedTestGlobalMain(c *cli.Context) error {
 	// to do: complete the code here
 	return nil
 }
-
-// to complete
