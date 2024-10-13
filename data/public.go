@@ -1,5 +1,7 @@
 package data
 
+// this is the list of all hosts that are used for the stability test
+
 var StabilityTestAddrList []string = []string{
 	"google.com",
 	"facebook.com",
@@ -21,7 +23,9 @@ var StabilityTestAddrList []string = []string{
 	"microsoft.com",
 	"amazon.com",
 	"ebay.com",
-}
+} // more to be added later
+
+// this is the list of all IP addresses that are used for the stability test
 
 var StabilityTestIPList []string = []string{
 	"8.8.8.8",
@@ -29,7 +33,11 @@ var StabilityTestIPList []string = []string{
 	"8.8.4.4",
 }
 
+// this is the list of all available stability grades
+
 var StabilityGrade []string = []string{"A", "B", "C", "D", "F", "G", "H", "I", "J", "K"}
+
+// this is the description of the stability grades
 
 var StabilityGradeDescription map[string]string = map[string]string{
 	"A": "Perfect",
@@ -44,7 +52,25 @@ var StabilityGradeDescription map[string]string = map[string]string{
 	"K": "Worst",
 }
 
+// var settingsFileName string = "settings.prp" (to be implemented later)
+
 var AvailableSettings []string = []string{
 	"ip_file",
 	"output_location",
+}
+
+// this is the current version of the app
+
+var CurrentAppVersion string = PreviousAppVersionsInclLatestVersion[0]
+
+// this is the list of all previous app versions including the latest version
+
+var PreviousAppVersionsInclLatestVersion []string = []string{
+	"0.7.0",
+	"0.6.0",
+	"0.5.0",
+	"0.4.0",
+	"0.3.0",
+	"0.2.0",
+	"0.1.0",
 }

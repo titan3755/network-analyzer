@@ -37,17 +37,8 @@ func mainApp() {
 	app := &cli.App{
 		Name: "netzer",
 		Usage: "[NETWORK ANALYZER] A network utility tool for analyzing network reliability and stability", 
-		Action: func(c *cli.Context) error {
-			println("Hello friend!")
-			return nil
-		},
+		Action: basic.BaseCmdMain,
 		Commands: []*cli.Command{
-			// {
-			// 	Name: "ping",
-			// 	Aliases: []string{"p"},
-			// 	Usage: "netzer ping utility",
-			// 	Action: ping.PingMain,
-			// },
 			{
 				Name: "ping-all-ip",
 				Aliases: []string{"pai"},
@@ -60,12 +51,6 @@ func mainApp() {
 				Usage: "ping a specific IP address/server address",
 				Action: ping.PingMain,
 			},
-			// {
-			// 	Name: "ip",
-			// 	Aliases: []string{"i"},
-			// 	Usage: "netzer ip utility",
-			// 	Action: ip.,
-			// },
 			{
 				Name: "add-single-ip-to-file",
 				Aliases: []string{"asif"},
@@ -108,12 +93,6 @@ func mainApp() {
 				Usage: "read the IP file and display the IP addresses",
 				Action: ip.ReadIPFromFileMain,
 			},
-			// {
-			// 	Name: "analyzer",
-			// 	Aliases: []string{"a"},
-			// 	Usage: "netzer analyzer utility",
-			// 	Action: analyzers.AnalyzerMain,
-			// },
 			{
 				Name: "stability-analysis",
 				Aliases: []string{"sa"},
