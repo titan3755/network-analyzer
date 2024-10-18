@@ -3,7 +3,6 @@ package basic
 import (
 	"fmt"
 	"netzer/utils"
-
 	pterm "github.com/pterm/pterm"
 	"github.com/urfave/cli/v2"
 )

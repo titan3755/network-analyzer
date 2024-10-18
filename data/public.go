@@ -52,7 +52,7 @@ var StabilityGradeDescription map[string]string = map[string]string{
 	"K": "Worst",
 }
 
-// var settingsFileName string = "settings.prp" (to be implemented later)
+var SettingsFileName string = "settings.prp"
 
 var AvailableSettings []string = []string{
 	"ip_file",

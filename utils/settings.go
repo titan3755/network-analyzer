@@ -2,7 +2,6 @@ package utils
 
 import (
 	"fmt"
-	"log"
 	"netzer/data"
 	"os"
 	"strings"
@@ -26,7 +25,7 @@ func SetSettings(setting string, property string) error {
 		return err
 	}
 	// write new settings
-	file, err := os.OpenFile("settings.prp", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
+	file, err := os.OpenFile(data.SettingsFileName, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
 		return err
 	}
@@ -44,7 +43,7 @@ func SetSettings(setting string, property string) error {
 
 func GetSettings(setting string) (string, error) {
 	// open and read file at location
-	file, err := os.Open("settings.prp")
+	file, err := os.Open(data.SettingsFileName)
 	if err != nil {
 		return "", err
 	}
@@ -64,7 +63,7 @@ func GetSettings(setting string) (string, error) {
 
 func WipeSettings() error {
 	// open and read file at location
-	if err := os.Truncate("settings.prp", 0); err != nil {
+	if err := os.Truncate(data.SettingsFileName, 0); err != nil {
 		return err
 	}
 	return nil
@@ -76,14 +75,12 @@ func ReadSettings(fileName string) map[string]string {
 	// open and read file at location
 	file, err := os.Open(fileName)
 	if err != nil {
-		log.Fatal(err)
 		return nil
 	}
 	defer file.Close()
 	var temp string
 	settings := make(map[string]string)
 	for {
-		log.Default().Println(temp)
 		_, err := fmt.Fscan(file, &temp)
 		if err != nil {
 			break

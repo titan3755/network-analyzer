@@ -10,7 +10,7 @@ import (
 
 func SetSettingsMain(c *cli.Context) error {
 	utils.BasicIntro()
-	settingFile := "settings.prp"
+	settingFile := data.SettingsFileName
 	fmt.Print("\n")
 	file := utils.ReadSettings(settingFile)
 	if file == nil {

@@ -7,6 +7,7 @@ import (
 	"netzer/ip"
 	"netzer/ping"
 	"netzer/utils"
+	"netzer/data"
 	"netzer/speedtest"
 	"os"
 	"github.com/urfave/cli/v2" // imports as package "cli"
@@ -24,7 +25,7 @@ func preChecks() {
 	_, ern := utils.GetSettings("ip_file")
 	if ern != nil {
 		// clear the file
-		err := os.WriteFile("settings.prp", []byte(""), 0666)
+		err := os.WriteFile(data.SettingsFileName, []byte(""), 0666)
 		if err != nil {
 			log.Fatal(err)
 		}

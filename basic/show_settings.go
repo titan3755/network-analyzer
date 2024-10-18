@@ -1,12 +1,13 @@
 package basic
 
 import (
-	"github.com/urfave/cli/v2"
+	"errors"
+	"fmt"
+	"netzer/data"
+	"netzer/utils"
 	"os"
 	"github.com/pterm/pterm"
-	"netzer/utils"
-	"fmt"
-	"errors"
+	"github.com/urfave/cli/v2"
 )
 
 // this function reads the settings.prp file which exists in the same directory and then it
@@ -15,7 +16,7 @@ import (
 func ShowSettingsMain(c *cli.Context) error {
 	utils.BasicIntro()
 	// check if settings file exists
-	if _, err := os.Stat("settings.prp"); errors.Is(err, os.ErrNotExist) {
+	if _, err := os.Stat(data.SettingsFileName); errors.Is(err, os.ErrNotExist) {
 		pterm.Error.Println("settings file does not exist")
 		return fmt.Errorf("settings file does not exist")
 	} else if err != nil {
@@ -23,7 +24,7 @@ func ShowSettingsMain(c *cli.Context) error {
 		return err
 	}
 	// check if settings file is empty
-	empF, ern := utils.FileEmptyCheck("settings.prp")
+	empF, ern := utils.FileEmptyCheck(data.SettingsFileName)
 	if ern != nil {
 		pterm.Error.Println(fmt.Sprintf("Error: %v", ern))
 		return ern
@@ -33,7 +34,7 @@ func ShowSettingsMain(c *cli.Context) error {
 		return nil
 	}
 	// read settings file
-	sett := utils.ReadSettings("settings.prp")
+	sett := utils.ReadSettings(data.SettingsFileName)
 	if sett == nil {
 		pterm.Error.Println(fmt.Sprintf("Error: %v", errors.New("could not read settings file")))
 		return fmt.Errorf("could not read settings file")
