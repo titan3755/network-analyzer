@@ -2,6 +2,7 @@ package utils
 
 import (
 	"time"
+	"sync"
 	st "github.com/showwin/speedtest-go/speedtest"
 )
 
@@ -10,6 +11,7 @@ func SpeedTestAll(st_time int) (map[string][][]string) {
 	var time_stamp = time.Now().Unix()
 	var stop_time = time_stamp + int64(st_time)
 	var raw_data_final map[string][][]string = make(map[string][][]string)
+	var wg sync.WaitGroup
 	go func() {
 		for {
 			if time.Now().Unix() >= stop_time {
@@ -29,7 +31,9 @@ func SpeedTestAll(st_time int) (map[string][][]string) {
 				break
 			}
 			data := <-comms
-			raw_data_final[data[0]] = append(raw_data_final[data[0]], data)
+			if len(data) > 0 && data[0] != "" && data != nil {
+				raw_data_final[data[0]] = append(raw_data_final[data[0]], data)
+			}
 		}
 	}()
 	// test against all servers in serverLst until time runs out
@@ -42,7 +46,9 @@ func SpeedTestAll(st_time int) (map[string][][]string) {
 			if comms == nil {
 				break
 			}
+			wg.Add(1)
 			go func(srvre *st.Server) {
+				defer wg.Done()
 				srvre.PingTest(nil)
 				srvre.DownloadTest()
 				srvre.UploadTest()
@@ -60,6 +66,7 @@ func SpeedTestAll(st_time int) (map[string][][]string) {
 				}
 			}(srvr)
 		}
+		wg.Wait()
 	}
 	return raw_data_final
 }

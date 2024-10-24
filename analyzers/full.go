@@ -1,23 +1,24 @@
 package analyzers
 
 import (
-	"github.com/urfave/cli/v2"
-	"netzer/utils"
+	"fmt"
 	"netzer/data"
+	"netzer/utils"
 	"strconv"
-	"github.com/pterm/pterm"
 	"time"
+	"github.com/pterm/pterm"
+	"github.com/urfave/cli/v2"
 )
 
 func StabilityAnalyzerFullMain(c *cli.Context) error {
 	utils.AnalyzerIntro()
-	var analyzingTime int = 30
+	var analyzingTime int = 60
 	if c.Args().First() != "" {
 		timeToInt, err := strconv.Atoi(c.Args().First())
 		if err != nil {
-			pterm.Warning.Println("An error occurred while converting the time to integer. Using default time of 20 seconds ...")
-		} else if timeToInt < 30 {
-			pterm.Warning.Println("The time entered is less than 30 seconds. Using default time of 30 seconds ...")
+			pterm.Warning.Println("An error occurred while converting the time to integer. Using default time of 60 seconds ...")
+		} else if timeToInt < 60 {
+			pterm.Warning.Println("The time entered is less than 60 seconds. Using default time of 60 seconds ...")
 		} else {
 			analyzingTime = timeToInt
 		}
@@ -44,13 +45,15 @@ func StabilityAnalyzerFullMain(c *cli.Context) error {
 	}
 	pterm.Info.Println("The following hosts will be tested:")
 	for _, host := range data.StabilityTestAddrList {
-		pterm.Info.Printf("[%s]", host)
+		fmt.Printf("[%s]", host)
 	}
-	pterm.Info.Println("\nThe following IP addresses will be tested:")
+	fmt.Print("\n\n")
+	pterm.Info.Println("The following IP addresses will be tested:")
 	for _, ip := range data.StabilityTestIPList {
-		pterm.Info.Printf("[%s]", ip)
+		fmt.Printf("[%s]", ip)
 	}
-	pterm.Info.Println("\nStarting the full stability test ...")
+	fmt.Print("\n\n")
+	pterm.Info.Println("Starting the full stability test ...")
 	go func() {
 		spnrInfo, _ := pterm.DefaultSpinner.Start("Performing stability test ...")
 		for {
