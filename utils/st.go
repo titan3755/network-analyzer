@@ -1,8 +1,10 @@
 package utils
 
 import (
-	"time"
+	"fmt"
 	"sync"
+	"time"
+
 	st "github.com/showwin/speedtest-go/speedtest"
 )
 
@@ -31,6 +33,7 @@ func SpeedTestAll(st_time int) (map[string][][]string) {
 				break
 			}
 			data := <-comms
+			fmt.Println(data)
 			if len(data) > 0 && data[0] != "" && data != nil {
 				raw_data_final[data[0]] = append(raw_data_final[data[0]], data)
 			}
@@ -65,8 +68,8 @@ func SpeedTestAll(st_time int) (map[string][][]string) {
 					return
 				}
 			}(srvr)
+			wg.Wait()
 		}
-		wg.Wait()
 	}
 	return raw_data_final
 }
