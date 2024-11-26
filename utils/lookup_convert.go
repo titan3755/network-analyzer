@@ -1,7 +1,7 @@
 package utils
 
 func ConvertListOfHostsToIPs(hosts []string) (map[string][]string, []error) {
-	var ips map[string][]string = make(map[string][]string)
+	var ips = make(map[string][]string)
 	var errors []error
 	for _, host := range hosts {
 		ip, err := LookupHostIP(host)
@@ -19,7 +19,7 @@ func ConvertSingleHostToIPs(host string) ([]string, error) {
 }
 
 func ConvertListOfIpsToHosts(ips []string) (map[string][]string, []error) {
-	var hosts map[string][]string = make(map[string][]string)
+	var hosts = make(map[string][]string)
 	var errors []error
 	for _, ip := range ips {
 		host, err := LookupAddrHost(ip)

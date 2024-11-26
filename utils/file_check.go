@@ -1,9 +1,9 @@
 package utils
 
 import (
-	"os"
 	"errors"
 	"netzer/data"
+	"os"
 )
 
 // this function checks if the settings file exists in the same directory and if it does not exist, it creates it

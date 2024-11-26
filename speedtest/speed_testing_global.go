@@ -2,20 +2,20 @@ package speedtest
 
 import (
 	"fmt"
-	"netzer/utils"
-	"slices"
-	"strconv"
 	"github.com/pterm/pterm"
 	st "github.com/showwin/speedtest-go/speedtest"
 	"github.com/urfave/cli/v2"
+	"netzer/utils"
+	"slices"
+	"strconv"
 )
 
 // SpeedTestGlobalMain function is the main function for the global speed test
 
 func SpeedTestGlobalMain(c *cli.Context) error {
 	utils.SpeedTestIntro()
-	var spinnerOn bool = true
-	var speed_tester = st.New()
+	var spinnerOn = true
+	var speedTester = st.New()
 	pterm.Info.Println("Starting quick speed test to global server ... [powered by speedtest.net]")
 	pterm.Info.Println("[Go API by showwin (https://github.com/showwin/speedtest-go)]")
 	fmt.Print("\n\n")
@@ -27,9 +27,9 @@ func SpeedTestGlobalMain(c *cli.Context) error {
 	selectedOptionRegion, _ := pterm.DefaultInteractiveSelect.WithOptions(options).Show()
 	pterm.Info.Printfln("Selected option: %s", pterm.Green(selectedOptionRegion))
 	fmt.Print("\n")
-	speed_tester.NewUserConfig(&st.UserConfig{Location: st.Locations[selectedOptionRegion]})
+	speedTester.NewUserConfig(&st.UserConfig{Location: st.Locations[selectedOptionRegion]})
 	pterm.Info.Println("Select a server to test against -->")
-	serverList, _ := speed_tester.FetchServers()
+	serverList, _ := speedTester.FetchServers()
 	var serverOptions []string
 	var srvrIDLst []string
 	for _, server := range serverList {
@@ -55,9 +55,18 @@ func SpeedTestGlobalMain(c *cli.Context) error {
 	}()
 	// spinner code here <--
 	for _, srv := range trgt {
-		srv.PingTest(nil)
-		srv.DownloadTest()
-		srv.UploadTest()
+		err := srv.PingTest(nil)
+		if err != nil {
+			return err
+		}
+		err = srv.DownloadTest()
+		if err != nil {
+			return err
+		}
+		err = srv.UploadTest()
+		if err != nil {
+			return err
+		}
 		pterm.Info.Printf("Latency: %s, Download: %s, Upload: %s\n", srv.Latency, srv.DLSpeed, srv.ULSpeed)
 		spinnerOn = false
 		srv.Context.Reset()

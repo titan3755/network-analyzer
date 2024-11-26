@@ -1,9 +1,9 @@
 package basic
 
 import (
+	"github.com/pterm/pterm"
 	"github.com/urfave/cli/v2"
 	"netzer/utils"
-	pterm "github.com/pterm/pterm"
 )
 
 func WipeSettingsMain(c *cli.Context) error {

@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"os"
 	"errors"
+	"os"
 )
 
 // this function checks if a file is empty or not

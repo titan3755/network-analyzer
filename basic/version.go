@@ -2,10 +2,10 @@ package basic
 
 import (
 	"fmt"
-	"netzer/data"
-	"netzer/utils"
 	"github.com/pterm/pterm"
 	"github.com/urfave/cli/v2"
+	"netzer/data"
+	"netzer/utils"
 )
 
 // this function shows the version of the application

@@ -2,10 +2,10 @@ package ip
 
 import (
 	"fmt"
-	"netzer/utils"
-	"os"
 	"github.com/pterm/pterm"
 	"github.com/urfave/cli/v2"
+	"netzer/utils"
+	"os"
 )
 
 // this function reads IP addresses from a file after checking its validity (main_cmd_function)
@@ -13,18 +13,18 @@ func ReadIPFromFileMain(c *cli.Context) error {
 	utils.IPIntro()
 	pterm.Info.Println(fmt.Sprintf("Reading IP addresses from file at %v ...", c.Args().First()))
 	if c.Args().Get(0) == "" {
-		var error_txt string = "error: no file path provided"
-		pterm.Error.Println(error_txt)
-		return fmt.Errorf("%s", error_txt)
+		var errorTxt = "error: no file path provided"
+		pterm.Error.Println(errorTxt)
+		return fmt.Errorf("%s", errorTxt)
 	}
-	ip_lst, err := readIPFromFile(c.Args().First())
+	ipLst, err := readIPFromFile(c.Args().First())
 	if err != nil {
 		pterm.Error.Println(fmt.Sprintf("Error: %v", err))
 		return fmt.Errorf("%v", err)
 	}
 	pterm.Success.Println("IP addresses read successfully!")
 	pterm.Info.Println("IP addresses:")
-	for _, ip := range ip_lst {
+	for _, ip := range ipLst {
 		if ip == "" {
 			continue
 		} else {

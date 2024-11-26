@@ -2,13 +2,13 @@ package ping
 
 import (
 	"fmt"
-	"netzer/utils"
-	"strings"
-	"time"
 	"github.com/pterm/pterm"
 	"github.com/urfave/cli/v2"
+	"netzer/utils"
 	"os"
 	"os/signal"
+	"strings"
+	"time"
 )
 
 // this function pings a specified IP address (main_cmd_function)
@@ -17,38 +17,38 @@ func PingMain(c *cli.Context) error {
 	utils.PingIntro()
 	pterm.Info.Println(fmt.Sprintf("Started pinging %v: Press Ctrl+C to stop", c.Args().Get(0)))
 	fmt.Println()
-	var count_loop int = 0
-	var sum_lantency float64 = 0
-	var average_latency float64 = 0
-	var latency_list []float64
-	var highest_latency float64
-	var lowest_latency float64
-	var pinger_run bool = true
+	var countLoop = 0
+	var sumLantency float64 = 0
+	var averageLatency float64 = 0
+	var latencyList []float64
+	var highestLatency float64
+	var lowestLatency float64
+	var pingerRun = true
 	area, _ := pterm.DefaultArea.Start()
-	ctrl_intr := make(chan os.Signal, 1)
-	signal.Notify(ctrl_intr, os.Interrupt) // listen for interrupt signal (ctrl+c)
+	ctrlIntr := make(chan os.Signal, 1)
+	signal.Notify(ctrlIntr, os.Interrupt) // listen for interrupt signal (ctrl+c)
 	go func() {
-		for range ctrl_intr {
-			pinger_run = false
+		for range ctrlIntr {
+			pingerRun = false
 			area.Clear()
-			pterm.Info.Printf("\nTotal pings sent: %d\nAverage latency: %s\nHighest latency: %dms\nLowest latency: %dms\nExiting pinger ...", count_loop, time.Duration(average_latency) * time.Millisecond, int(highest_latency), int(lowest_latency))
+			pterm.Info.Printf("\nTotal pings sent: %d\nAverage latency: %s\nHighest latency: %dms\nLowest latency: %dms\nExiting pinger ...", countLoop, time.Duration(averageLatency)*time.Millisecond, int(highestLatency), int(lowestLatency))
 		}
 	}()
-	for pinger_run {
-		latency, errt := utils.ICMP_Ping(c.Args().Get(0))
+	for pingerRun {
+		latency, errt := utils.IcmpPing(c.Args().Get(0))
 		if errt != nil {
 			area.Update(pterm.Error.Sprintf("Error: %v", errt))
 		} else if strings.Contains(latency, "Error") {
 			area.Update(pterm.Error.Sprintf("Error: %s", latency))
 		} else {
-			count_loop++
-			latency_float, _ := time.ParseDuration(latency)
-			sum_lantency += float64(latency_float.Milliseconds())
-			average_latency = sum_lantency / float64(count_loop)
-			latency_list = append(latency_list, float64(latency_float.Milliseconds()))
-			highest_latency = utils.FindMax(latency_list)
-			lowest_latency = utils.FindMin(latency_list)
-			area.Update(pterm.Success.Sprintf("Latency: %s\nAverage: %s\nHighest: %dms\nLowest: %dms", latency, time.Duration(average_latency) * time.Millisecond, int(highest_latency), int(lowest_latency)))
+			countLoop++
+			latencyFloat, _ := time.ParseDuration(latency)
+			sumLantency += float64(latencyFloat.Milliseconds())
+			averageLatency = sumLantency / float64(countLoop)
+			latencyList = append(latencyList, float64(latencyFloat.Milliseconds()))
+			highestLatency = utils.FindMax(latencyList)
+			lowestLatency = utils.FindMin(latencyList)
+			area.Update(pterm.Success.Sprintf("Latency: %s\nAverage: %s\nHighest: %dms\nLowest: %dms", latency, time.Duration(averageLatency)*time.Millisecond, int(highestLatency), int(lowestLatency)))
 		}
 		time.Sleep(time.Second / 2)
 	}

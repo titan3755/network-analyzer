@@ -1,9 +1,9 @@
 package utils
 
 import (
+	"fmt"
 	"os"
 	"strings"
-	"fmt"
 )
 
 // this function checks if the ip is already in the file
@@ -13,7 +13,12 @@ func CheckIfIPAlreadyInFile(ip string, fileLocation string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			fmt.Println(err)
+		}
+	}(file)
 	var ips []string
 	var temp string
 	for {
@@ -61,7 +66,12 @@ func RemoveDuplicateIPFromFile(filePath string) error {
 	if er != nil {
 		return er
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			fmt.Println(err)
+		}
+	}(file)
 	_, err = file.WriteString(newDat)
 	if err != nil {
 		return err

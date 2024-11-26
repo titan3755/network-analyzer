@@ -2,17 +2,17 @@ package analyzers
 
 import (
 	"fmt"
+	"github.com/pterm/pterm"
+	"github.com/urfave/cli/v2"
 	"netzer/data"
 	"netzer/utils"
 	"strconv"
 	"time"
-	"github.com/pterm/pterm"
-	"github.com/urfave/cli/v2"
 )
 
 func StabilityAnalyzerFullMain(c *cli.Context) error {
 	utils.AnalyzerIntro()
-	var analyzingTime int = 60
+	var analyzingTime = 60
 	if c.Args().First() != "" {
 		timeToInt, err := strconv.Atoi(c.Args().First())
 		if err != nil {
@@ -26,7 +26,7 @@ func StabilityAnalyzerFullMain(c *cli.Context) error {
 	pterm.Info.Println("This analyzer will create a complete network stability report by pinging different servers, checking the packet losses and simultaneously speed testing the network.")
 	pterm.Info.Println("The speed testing is done to ensure that the network can hold up under load.")
 	pterm.Info.Println("The analyzer will run for", analyzingTime, "seconds.")
-	var longIPList map[string][]string = make(map[string][]string)
+	var longIPList = make(map[string][]string)
 	var errsa []error
 	var ipList []string
 	longIPList, errsa = utils.ConvertListOfHostsToIPs(data.StabilityTestAddrList)
@@ -38,7 +38,7 @@ func StabilityAnalyzerFullMain(c *cli.Context) error {
 	}
 	ipList = data.StabilityTestIPList
 	var mergedIPList []string
-	var spinnerOn bool = true	
+	var spinnerOn = true
 	mergedIPList = append(mergedIPList, ipList...)
 	for _, ipl := range longIPList {
 		mergedIPList = append(mergedIPList, ipl...)
@@ -65,15 +65,15 @@ func StabilityAnalyzerFullMain(c *cli.Context) error {
 		}
 	}()
 	// speed test
-	var speed_test_data map[string][][]string = make(map[string][][]string)
+	var speedTestData = make(map[string][][]string)
 	go func() {
-		speed_test_data = utils.SpeedTestAll(analyzingTime)
+		speedTestData = utils.SpeedTestAll(analyzingTime)
 	}()
 	// stability test
-	var stability_test_data map[string][][]string = make(map[string][][]string)
+	var stabilityTestData = make(map[string][][]string)
 	var errMap map[string][]error
 	go func() {
-		stability_test_data, errMap = utils.ICMP_Ping_Concurrent(mergedIPList, analyzingTime)
+		stabilityTestData, errMap = utils.IcmpPingConcurrent(mergedIPList, analyzingTime)
 		if len(errMap) > 0 {
 			pterm.Error.Println("An error occurred while performing the stability test.")
 			for key, value := range errMap {
@@ -82,14 +82,14 @@ func StabilityAnalyzerFullMain(c *cli.Context) error {
 			}
 		}
 	}()
-	var time_stamp = time.Now().Unix()
-	var stop_time = time_stamp + int64(analyzingTime)
-	var time_run_out bool = false
+	var timeStamp = time.Now().Unix()
+	var stopTime = timeStamp + int64(analyzingTime)
+	var timeRunOut = false
 	// check if time run out
 	go func() {
 		for {
-			if time.Now().Unix() >= stop_time {
-				time_run_out = true
+			if time.Now().Unix() >= stopTime {
+				timeRunOut = true
 				break
 			}
 			continue
@@ -97,7 +97,7 @@ func StabilityAnalyzerFullMain(c *cli.Context) error {
 	}()
 	// wait for both tests to complete
 	for {
-		if (len(speed_test_data) > 0 && len(stability_test_data) > 0) || time_run_out {
+		if (len(speedTestData) > 0 && len(stabilityTestData) > 0) || timeRunOut {
 			break
 		}
 		continue
@@ -107,18 +107,18 @@ func StabilityAnalyzerFullMain(c *cli.Context) error {
 	// table creator location
 	// for now, just print out the raw data for both tests (debugging purposes)
 	pterm.Info.Println("Speed test data:")
-	for key, value := range speed_test_data {
+	for key, value := range speedTestData {
 		pterm.Info.Println(key)
 		for _, val := range value {
 			pterm.Info.Println(val)
 		}
 	}
 	pterm.Info.Println("Stability test data:")
-	for key, value := range stability_test_data {
+	for key, value := range stabilityTestData {
 		pterm.Info.Println(key)
 		for _, val := range value {
 			pterm.Info.Println(val)
 		}
 	}
 	return nil
-}		
+}

@@ -3,11 +3,11 @@ package basic
 import (
 	"errors"
 	"fmt"
+	"github.com/pterm/pterm"
+	"github.com/urfave/cli/v2"
 	"netzer/data"
 	"netzer/utils"
 	"os"
-	"github.com/pterm/pterm"
-	"github.com/urfave/cli/v2"
 )
 
 // this function reads the settings.prp file which exists in the same directory and then it

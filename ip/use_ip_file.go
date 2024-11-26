@@ -2,22 +2,22 @@ package ip
 
 import (
 	"fmt"
-	"os"
-	"github.com/urfave/cli/v2"
 	"github.com/pterm/pterm"
+	"github.com/urfave/cli/v2"
 	"netzer/utils"
+	"os"
 )
 
-// this function sets the ip_file setting in the settings.prp file to the specified directory in order to 
+// this function sets the ip_file setting in the settings.prp file to the specified directory in order to
 // use it for analyzing cmds and ping cmds (main_cmd_function)
 
 func UseIPFileMain(c *cli.Context) error {
 	utils.IPIntro()
 	pterm.Info.Println("Using IP file...")
 	if c.Args().First() == "" {
-		var error_txt string = "error: no file path provided"
-		pterm.Error.Println(error_txt)
-		return fmt.Errorf("%s", error_txt)
+		var errorTxt = "error: no file path provided"
+		pterm.Error.Println(errorTxt)
+		return fmt.Errorf("%s", errorTxt)
 	}
 	err := useIPFile(c.Args().First())
 	if err != nil {

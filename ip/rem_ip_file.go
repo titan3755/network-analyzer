@@ -2,10 +2,10 @@ package ip
 
 import (
 	"fmt"
-	"os"
-	"github.com/urfave/cli/v2"
 	"github.com/pterm/pterm"
+	"github.com/urfave/cli/v2"
 	"netzer/utils"
+	"os"
 	"strings"
 )
 
@@ -15,13 +15,13 @@ func RemoveSingleIPFromFileMain(c *cli.Context) error {
 	utils.IPIntro()
 	pterm.Info.Println(fmt.Sprintf("Removing IP address %v from the list...", c.Args().Get(1)))
 	if c.Args().Get(1) == "" {
-		var error_txt string = "error: no ip address provided"
-		pterm.Error.Println(error_txt)
-		return fmt.Errorf("%s", error_txt)
+		var errorTxt = "error: no ip address provided"
+		pterm.Error.Println(errorTxt)
+		return fmt.Errorf("%s", errorTxt)
 	} else if c.Args().First() == "" {
-		var error_txt string = "error: no file path provided"
-		pterm.Error.Println(error_txt)
-		return fmt.Errorf("%s", error_txt)
+		var errorTxt = "error: no file path provided"
+		pterm.Error.Println(errorTxt)
+		return fmt.Errorf("%s", errorTxt)
 	}
 	err := removeIPFromFile(c.Args().Get(1), c.Args().First())
 	if err != nil {
@@ -38,13 +38,13 @@ func RemoveMultipleIPFromFileMain(c *cli.Context) error {
 	utils.IPIntro()
 	pterm.Info.Println("Removing IP addresses from the list...")
 	if c.Args().Get(1) == "" {
-		var error_txt string = "error: no ip addresses provided"
-		pterm.Error.Println(error_txt)
-		return fmt.Errorf("%s", error_txt)
+		var errorTxt = "error: no ip addresses provided"
+		pterm.Error.Println(errorTxt)
+		return fmt.Errorf("%s", errorTxt)
 	} else if c.Args().First() == "" {
-		var error_txt string = "error: no file path provided"
-		pterm.Error.Println(error_txt)
-		return fmt.Errorf("%s", error_txt)
+		var errorTxt = "error: no file path provided"
+		pterm.Error.Println(errorTxt)
+		return fmt.Errorf("%s", errorTxt)
 	}
 	var ipList []string
 	for _, ip := range c.Args().Slice() {
@@ -53,15 +53,15 @@ func RemoveMultipleIPFromFileMain(c *cli.Context) error {
 		}
 		ern := utils.CheckIfValidIPv4(ip)
 		if ern {
-			ipList = append(ipList, ip)	
+			ipList = append(ipList, ip)
 		} else {
 			pterm.Error.Println(fmt.Sprintf("invalid IP address %v provided, not removed from file", ip))
 		}
 	}
 	if len(ipList) == 0 {
-		var error_txt string = "error: no valid ip addresses provided"
-		pterm.Error.Println(error_txt)
-		return fmt.Errorf("%s", error_txt)
+		var errorTxt = "error: no valid ip addresses provided"
+		pterm.Error.Println(errorTxt)
+		return fmt.Errorf("%s", errorTxt)
 	}
 	err := removeMultipleIPFromFile(utils.ConvListOfIPToFileFormat(ipList), c.Args().First())
 	if err != nil {
@@ -110,7 +110,12 @@ func removeIPFromFile(ip string, fileLocation string) error {
 		if er != nil {
 			return er
 		}
-		defer file.Close()
+		defer func(file *os.File) {
+			err := file.Close()
+			if err != nil {
+				return
+			}
+		}(file)
 		_, err = file.WriteString(newDat)
 		if err != nil {
 			return err
@@ -153,7 +158,12 @@ func removeMultipleIPFromFile(ipConvFormat string, location string) error {
 	if er != nil {
 		return er
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			return
+		}
+	}(file)
 	_, err = file.WriteString(newDat)
 	if err != nil {
 		return err

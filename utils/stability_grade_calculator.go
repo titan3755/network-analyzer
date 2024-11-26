@@ -7,7 +7,7 @@ import (
 )
 
 func CalculateStabilityGrade(psent, precv, ploss, minrtt, maxrtt, avgrtt string) (string, error) {
-	var stabGrade []string = data.StabilityGrade
+	var stabGrade = data.StabilityGrade
 	// remove "ms" from minrtt, maxrtt and avgrtt
 	minrtt = minrtt[:len(minrtt)-2]
 	maxrtt = maxrtt[:len(maxrtt)-2]
@@ -25,11 +25,11 @@ func CalculateStabilityGrade(psent, precv, ploss, minrtt, maxrtt, avgrtt string)
 	if err != nil {
 		return "", err
 	}
-	min, err := strconv.ParseFloat(minrtt, 64)
+	minN, err := strconv.ParseFloat(minrtt, 64)
 	if err != nil {
 		return "", err
 	}
-	max, err := strconv.ParseFloat(maxrtt, 64)
+	maxN, err := strconv.ParseFloat(maxrtt, 64)
 	if err != nil {
 		return "", err
 	}
@@ -92,26 +92,26 @@ func CalculateStabilityGrade(psent, precv, ploss, minrtt, maxrtt, avgrtt string)
 			rttGrade = stabGrade[9]
 		}
 	}
-	if min >= 0.0 && max >= 0.0 {
-		if max-min < 50 {
+	if minN >= 0.0 && maxN >= 0.0 {
+		if maxN-minN < 50 {
 			deltaPingGrade = stabGrade[0]
-		} else if max-min >= 50 && max-min < 100 {
+		} else if maxN-minN >= 50 && maxN-minN < 100 {
 			deltaPingGrade = stabGrade[1]
-		} else if max-min >= 100 && max-min < 150 {
+		} else if maxN-minN >= 100 && maxN-minN < 150 {
 			deltaPingGrade = stabGrade[2]
-		} else if max-min >= 150 && max-min < 200 {
+		} else if maxN-minN >= 150 && maxN-minN < 200 {
 			deltaPingGrade = stabGrade[3]
-		} else if max-min >= 200 && max-min < 250 {
+		} else if maxN-minN >= 200 && maxN-minN < 250 {
 			deltaPingGrade = stabGrade[4]
-		} else if max-min >= 250 && max-min < 300 {
+		} else if maxN-minN >= 250 && maxN-minN < 300 {
 			deltaPingGrade = stabGrade[5]
-		} else if max-min >= 300 && max-min < 350 {
+		} else if maxN-minN >= 300 && maxN-minN < 350 {
 			deltaPingGrade = stabGrade[6]
-		} else if max-min >= 350 && max-min < 400 {
+		} else if maxN-minN >= 350 && maxN-minN < 400 {
 			deltaPingGrade = stabGrade[7]
-		} else if max-min >= 400 && max-min < 450 {
+		} else if maxN-minN >= 400 && maxN-minN < 450 {
 			deltaPingGrade = stabGrade[8]
-		} else if max-min >= 450 && max-min <= 500 {
+		} else if maxN-minN >= 450 && maxN-minN <= 500 {
 			deltaPingGrade = stabGrade[9]
 		} else {
 			deltaPingGrade = stabGrade[9]
@@ -143,12 +143,12 @@ func CalculateStabilityGrade(psent, precv, ploss, minrtt, maxrtt, avgrtt string)
 	} else if indexNo < 1 {
 		indexNo = 1
 	}
-	grade = stabGrade[int(indexNo) - 1]
+	grade = stabGrade[int(indexNo)-1]
 	return grade, nil
 }
 
 func CalculateOverallStabilityGrade(ipData map[string]string) string {
-	var stabGrade []string = data.StabilityGrade
+	var stabGrade = data.StabilityGrade
 	// calculate overall stability grade
 	var grade string
 	var total float64
@@ -171,6 +171,6 @@ func CalculateOverallStabilityGrade(ipData map[string]string) string {
 	} else if indexNo < 1 {
 		indexNo = 1
 	}
-	grade = stabGrade[int(indexNo) - 1]
+	grade = stabGrade[int(indexNo)-1]
 	return grade
 }

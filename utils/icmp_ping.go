@@ -2,13 +2,13 @@ package utils
 
 import (
 	"fmt"
-	"time"
 	probing "github.com/prometheus-community/pro-bing"
+	"time"
 )
 
 // ICMP_Ping is a function that sends an ICMP echo request to the specified host
 
-func ICMP_Ping(host string) (latency string, er error) {
+func IcmpPing(host string) (latency string, er error) {
 	pinger, err := probing.NewPinger(host)
 	pinger.SetPrivileged(true)
 	if err != nil {
@@ -23,10 +23,10 @@ func ICMP_Ping(host string) (latency string, er error) {
 	return stats, nil
 }
 
-func ICMP_Ping_Concurrent(hostList []string, ping_time int) (map[string][][]string, map[string][]error) {
-	var comms chan []string = make(chan []string)
-	var raw_data_final map[string][][]string = make(map[string][][]string)
-	var errors map[string][]error = make(map[string][]error)
+func IcmpPingConcurrent(hostList []string, pingTime int) (map[string][][]string, map[string][]error) {
+	var comms = make(chan []string)
+	var rawDataFinal = make(map[string][][]string)
+	var errors = make(map[string][]error)
 	for _, host := range hostList {
 		go func(hostF string) {
 			pinger, err := probing.NewPinger(hostF)
@@ -58,11 +58,11 @@ func ICMP_Ping_Concurrent(hostList []string, ping_time int) (map[string][][]stri
 			}()
 		}(host)
 	}
-	go func () {
+	go func() {
 		for stats := range comms {
-			raw_data_final[stats[0]] = [][]string{stats}
+			rawDataFinal[stats[0]] = [][]string{stats}
 		}
 	}()
-	time.Sleep(time.Second * time.Duration(ping_time))
-	return raw_data_final, errors
+	time.Sleep(time.Second * time.Duration(pingTime))
+	return rawDataFinal, errors
 }

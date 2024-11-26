@@ -2,10 +2,10 @@ package ip
 
 import (
 	"fmt"
-	"netzer/utils"
-	"os" 
 	"github.com/pterm/pterm"
 	"github.com/urfave/cli/v2"
+	"netzer/utils"
+	"os"
 )
 
 // this function adds a single IP address to a file (main_cmd_function)
@@ -14,13 +14,13 @@ func AddSingleIPToFileMain(c *cli.Context) error {
 	utils.IPIntro()
 	pterm.Info.Println(fmt.Sprintf("Adding IP address %v to the list...", c.Args().Get(1)))
 	if c.Args().Get(1) == "" {
-		var error_txt string = "error: no ip address provided"
-		pterm.Error.Println(error_txt)
-		return fmt.Errorf("%s", error_txt)
+		var errorTxt = "error: no ip address provided"
+		pterm.Error.Println(errorTxt)
+		return fmt.Errorf("%s", errorTxt)
 	} else if c.Args().First() == "" {
-		var error_txt string = "error: no file path provided"
-		pterm.Error.Println(error_txt)
-		return fmt.Errorf("%s", error_txt)
+		var errorTxt = "error: no file path provided"
+		pterm.Error.Println(errorTxt)
+		return fmt.Errorf("%s", errorTxt)
 	}
 	err := addIPToFile(c.Args().Get(1), c.Args().First())
 	if err != nil {
@@ -37,13 +37,13 @@ func AddMultipleIPToFileMain(c *cli.Context) error {
 	utils.IPIntro()
 	pterm.Info.Println("Adding IP addresses to the list...")
 	if c.Args().Get(1) == "" {
-		var error_txt string = "error: no ip addresses provided"
-		pterm.Error.Println(error_txt)
-		return fmt.Errorf("%s", error_txt)
+		var errorTxt = "error: no ip addresses provided"
+		pterm.Error.Println(errorTxt)
+		return fmt.Errorf("%s", errorTxt)
 	} else if c.Args().First() == "" {
-		var error_txt string = "error: no file path provided"
-		pterm.Error.Println(error_txt)
-		return fmt.Errorf("%s", error_txt)
+		var errorTxt = "error: no file path provided"
+		pterm.Error.Println(errorTxt)
+		return fmt.Errorf("%s", errorTxt)
 	}
 	var ipList []string
 	for _, ip := range c.Args().Slice() {
@@ -52,7 +52,7 @@ func AddMultipleIPToFileMain(c *cli.Context) error {
 		}
 		ern := utils.CheckIfValidIPv4(ip)
 		if ern {
-			ipList = append(ipList, ip)	
+			ipList = append(ipList, ip)
 		} else {
 			pterm.Error.Println(fmt.Sprintf("invalid IP address %v provided, not added to file", ip))
 		}
@@ -82,8 +82,8 @@ func addMultipleIPToFile(ipConvFormat string, location string) error {
 		return fmt.Errorf("file does not exist")
 	}
 	// check if IP addresses are already in file
-	ip_nList := utils.ConvFileFormatToListOfIP(string(ipConvFormat))
-	for _, ip := range ip_nList {
+	ipNlist := utils.ConvFileFormatToListOfIP(ipConvFormat)
+	for _, ip := range ipNlist {
 		if in, err := utils.CheckIfIPAlreadyInFile(ip, location); err != nil {
 			return err
 		} else if in && ip != "" {
@@ -96,7 +96,12 @@ func addMultipleIPToFile(ipConvFormat string, location string) error {
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			fmt.Println(err)
+		}
+	}(file)
 	_, err = file.WriteString(ipConvFormat)
 	if err != nil {
 		return err
@@ -134,7 +139,12 @@ func addIPToFile(ip string, location string) error {
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			fmt.Println(err)
+		}
+	}(file)
 	_, err = file.WriteString(ip + ";")
 	if err != nil {
 		return err

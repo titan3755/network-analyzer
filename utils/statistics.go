@@ -2,20 +2,20 @@ package utils
 
 import (
 	"fmt"
+	tb "github.com/aquasecurity/table"
+	"github.com/pterm/pterm"
+	"netzer/data"
 	"os"
 	"strconv"
-	"netzer/data"
-	tb "github.com/aquasecurity/table"
-	pterm "github.com/pterm/pterm"
 )
 
-func StatisticsTableCreatorForPingAll(ip_map map[string][][]string, error_map map[string][]error) {
+func StatisticsTableCreatorForPingAll(ipMap map[string][][]string, errorMap map[string][]error) {
 	DBStatisticsTableIntro()
 	tableIP := tb.New(os.Stdout)
 	tableIP.SetHeaders("IP Address", "Packets Sent", "Packets Received", "Packet Loss", "Min RTT", "Max RTT", "Avg RTT")
 	tableIP.SetAlignment(tb.AlignCenter)
-	for ip, data := range ip_map {
-		latest := data[len(data)-1]
+	for ip, d := range ipMap {
+		latest := d[len(d)-1]
 		avgRTT := latest[1]
 		maxRTT := latest[2]
 		minRTT := latest[3]
@@ -25,11 +25,11 @@ func StatisticsTableCreatorForPingAll(ip_map map[string][][]string, error_map ma
 		tableIP.AddRow(ip, pktSent, pktRecv, pktLoss, minRTT, maxRTT, avgRTT)
 	}
 	tableIP.Render()
-	var noErr bool = true
+	var noErr = true
 	tableErr := tb.New(os.Stdout)
 	tableErr.SetHeaders("IP Address", "Error")
 	tableErr.SetAlignment(tb.AlignCenter)
-	for ip, errs := range error_map {
+	for ip, errs := range errorMap {
 		for _, err := range errs {
 			noErr = false
 			tableErr.AddRow(ip, fmt.Sprintf("%s", err))
@@ -41,9 +41,9 @@ func StatisticsTableCreatorForPingAll(ip_map map[string][][]string, error_map ma
 	tableErr.Render()
 }
 
-func StatisticsTableCreatorForStabilityAnalyzer(ip_map map[string][][]string, error_map map[string][]error) {
+func StatisticsTableCreatorForStabilityAnalyzer(ipMap map[string][][]string, errorMap map[string][]error) {
 	DBStatisticsTableIntro()
-	var ipIndividualStabilityGradeData map[string]string = make(map[string]string)
+	var ipIndividualStabilityGradeData = make(map[string]string)
 	fmt.Print("\n")
 	pterm.Info.Println("Ping statistics for the IP addresses:")
 	fmt.Print("\n")
@@ -51,8 +51,8 @@ func StatisticsTableCreatorForStabilityAnalyzer(ip_map map[string][][]string, er
 	tableIP := tb.New(os.Stdout)
 	tableIP.SetHeaders("IP Address", "Packets Sent", "Packets Received", "Packet Loss", "Min RTT", "Max RTT", "Avg RTT")
 	tableIP.SetAlignment(tb.AlignCenter)
-	for ip, data := range ip_map {
-		latest := data[len(data)-1]
+	for ip, d := range ipMap {
+		latest := d[len(d)-1]
 		avgRTT := latest[1]
 		maxRTT := latest[2]
 		minRTT := latest[3]
@@ -62,7 +62,7 @@ func StatisticsTableCreatorForStabilityAnalyzer(ip_map map[string][][]string, er
 		tableIP.AddRow(ip, pktSent, pktRecv, pktLoss, minRTT, maxRTT, avgRTT)
 	}
 	tableIP.Render()
-	var noErr bool = true
+	var noErr = true
 	fmt.Print("\n")
 	pterm.Info.Println("Error messages for the IP addresses:")
 	fmt.Print("\n")
@@ -70,7 +70,7 @@ func StatisticsTableCreatorForStabilityAnalyzer(ip_map map[string][][]string, er
 	tableErr := tb.New(os.Stdout)
 	tableErr.SetHeaders("IP Address", "Error")
 	tableErr.SetAlignment(tb.AlignCenter)
-	for ip, errs := range error_map {
+	for ip, errs := range errorMap {
 		for _, err := range errs {
 			noErr = false
 			tableErr.AddRow(ip, fmt.Sprintf("%s", err))
@@ -87,8 +87,8 @@ func StatisticsTableCreatorForStabilityAnalyzer(ip_map map[string][][]string, er
 	tableStab := tb.New(os.Stdout)
 	tableStab.SetHeaders("IP Address", "Recv/Sent %", "\u0394Ping", "Avg", "Stability Grade")
 	tableStab.SetAlignment(tb.AlignCenter)
-	for ip, data := range ip_map {
-		latest := data[len(data)-1]
+	for ip, d := range ipMap {
+		latest := d[len(d)-1]
 		avgRTT := latest[1]
 		maxRTT := latest[2]
 		minRTT := latest[3]

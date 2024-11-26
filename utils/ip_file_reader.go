@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"os"
 	"errors"
+	"os"
 	"strings"
 )
 
@@ -36,11 +36,11 @@ func IpFileReader(fileName string) ([]string, error) {
 	if errfr != nil {
 		return nil, errfr
 	}
-	var final_list []string
+	var finalList []string
 	for _, line := range strings.Split(string(data), ";") {
 		if line != "" {
-			final_list = append(final_list, strings.TrimSpace(line))
+			finalList = append(finalList, strings.TrimSpace(line))
 		}
 	}
-	return final_list, nil
+	return finalList, nil
 }

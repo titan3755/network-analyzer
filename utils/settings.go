@@ -29,7 +29,12 @@ func SetSettings(setting string, property string) error {
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			fmt.Println(err)
+		}
+	}(file)
 	for _, line := range fileData {
 		_, err := file.WriteString(line + "\n")
 		if err != nil {
@@ -47,7 +52,12 @@ func GetSettings(setting string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			fmt.Println(err)
+		}
+	}(file)
 	var temp string
 	for {
 		_, err := fmt.Fscan(file, &temp)
@@ -77,7 +87,12 @@ func ReadSettings(fileName string) map[string]string {
 	if err != nil {
 		return nil
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			fmt.Println(err)
+		}
+	}(file)
 	var temp string
 	settings := make(map[string]string)
 	for {
@@ -98,36 +113,36 @@ func ReadSettings(fileName string) map[string]string {
 	return settings
 }
 
-	// file, err := os.OpenFile("settings.prp", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
-	// if err != nil {
-	// 	return err
-	// }
-	// defer file.Close()
-	// // delete previous instance of setting
-	// dataString, erros := os.ReadFile("settings.prp")
-	// if erros != nil {
-	// 	return erros
-	// }
-	// nString := string(dataString)
-	// log.Default().Println("ye ye boi")
-	// log.Default().Println(nString)
-	// resList := strings.Split(nString, "\n")
-	// finalLst := []string{}
-	// for _, line := range resList {
-	// 	if strings.Contains(line, setting) {
-	// 		continue
-	// 	}
-	// 	finalLst = append(finalLst, line)
-	// }
-	// for _, line := range finalLst {
-	// 	_, err := file.WriteString(line + "\n")
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// }
-	// // write new setting
-	// _, err = file.WriteString(setting + "=" + property + "\n")
-	// if err != nil {
-	// 	return err
-	// }
-	// return nil
+// file, err := os.OpenFile("settings.prp", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
+// if err != nil {
+// 	return err
+// }
+// defer file.Close()
+// // delete previous instance of setting
+// dataString, erros := os.ReadFile("settings.prp")
+// if erros != nil {
+// 	return erros
+// }
+// nString := string(dataString)
+// log.Default().Println("ye ye boi")
+// log.Default().Println(nString)
+// resList := strings.Split(nString, "\n")
+// finalLst := []string{}
+// for _, line := range resList {
+// 	if strings.Contains(line, setting) {
+// 		continue
+// 	}
+// 	finalLst = append(finalLst, line)
+// }
+// for _, line := range finalLst {
+// 	_, err := file.WriteString(line + "\n")
+// 	if err != nil {
+// 		return err
+// 	}
+// }
+// // write new setting
+// _, err = file.WriteString(setting + "=" + property + "\n")
+// if err != nil {
+// 	return err
+// }
+// return nil

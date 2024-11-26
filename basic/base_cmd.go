@@ -2,9 +2,9 @@ package basic
 
 import (
 	"fmt"
-	"netzer/utils"
-	pterm "github.com/pterm/pterm"
+	"github.com/pterm/pterm"
 	"github.com/urfave/cli/v2"
+	"netzer/utils"
 )
 
 func BaseCmdMain(c *cli.Context) error {

@@ -2,7 +2,7 @@ package data
 
 // this is the list of all hosts that are used for the stability test
 
-var StabilityTestAddrList []string = []string{
+var StabilityTestAddrList = []string{
 	"google.com",
 	"facebook.com",
 	"twitter.com",
@@ -27,7 +27,7 @@ var StabilityTestAddrList []string = []string{
 
 // this is the list of all IP addresses that are used for the stability test
 
-var StabilityTestIPList []string = []string{
+var StabilityTestIPList = []string{
 	"8.8.8.8",
 	"9.9.9.9",
 	"8.8.4.4",
@@ -35,11 +35,11 @@ var StabilityTestIPList []string = []string{
 
 // this is the list of all available stability grades
 
-var StabilityGrade []string = []string{"A", "B", "C", "D", "F", "G", "H", "I", "J", "K"}
+var StabilityGrade = []string{"A", "B", "C", "D", "F", "G", "H", "I", "J", "K"}
 
 // this is the description of the stability grades
 
-var StabilityGradeDescription map[string]string = map[string]string{
+var StabilityGradeDescription = map[string]string{
 	"A": "Perfect",
 	"B": "Excellent",
 	"C": "Very Good",
@@ -52,20 +52,20 @@ var StabilityGradeDescription map[string]string = map[string]string{
 	"K": "Worst",
 }
 
-var SettingsFileName string = "settings.prp"
+var SettingsFileName = "settings.prp"
 
-var AvailableSettings []string = []string{
+var AvailableSettings = []string{
 	"ip_file",
 	"output_location",
 }
 
 // this is the current version of the app
 
-var CurrentAppVersion string = PreviousAppVersionsInclLatestVersion[0]
+var CurrentAppVersion = PreviousAppVersionsInclLatestVersion[0]
 
 // this is the list of all previous app versions including the latest version
 
-var PreviousAppVersionsInclLatestVersion []string = []string{
+var PreviousAppVersionsInclLatestVersion = []string{
 	"0.7.0",
 	"0.6.0",
 	"0.5.0",

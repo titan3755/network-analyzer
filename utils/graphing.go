@@ -1,14 +1,14 @@
 package utils
 
 import (
+	"github.com/pterm/pterm"
 	"net"
-	pterm "github.com/pterm/pterm"
 )
 
-func GenerateStabilityGradeGraph(ip_graph_data map[string]string) {
+func GenerateStabilityGradeGraph(ipGraphData map[string]string) {
 	var gradeLst []string
 	var hst []string
-	for ip, grade := range ip_graph_data {
+	for ip, grade := range ipGraphData {
 		host, erh := net.LookupAddr(ip)
 		if erh != nil {
 			continue
@@ -17,8 +17,8 @@ func GenerateStabilityGradeGraph(ip_graph_data map[string]string) {
 		hst = append(hst, host[0])
 	}
 	// Create a new line chart
-	bar := []pterm.Bar{}
-	var count int = 0
+	var bar []pterm.Bar
+	var count = 0
 	for i, host := range hst {
 		br := pterm.Bar{
 			Label: host,
@@ -32,7 +32,10 @@ func GenerateStabilityGradeGraph(ip_graph_data map[string]string) {
 		return
 	}
 	// Create a new line chart
-	pterm.DefaultBarChart.WithHorizontal().WithBars(bar).WithHeight(4).Render()
+	err := pterm.DefaultBarChart.WithHorizontal().WithBars(bar).WithHeight(4).Render()
+	if err != nil {
+		return
+	}
 }
 
 func gradeToNumber(grade string) int {
@@ -61,4 +64,3 @@ func gradeToNumber(grade string) int {
 		return 0
 	}
 }
-

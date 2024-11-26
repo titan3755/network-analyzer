@@ -1,11 +1,11 @@
 package ip
 
 import (
-	"os"
-	"netzer/utils"
-	"github.com/urfave/cli/v2"
-	"github.com/pterm/pterm"
 	"fmt"
+	"github.com/pterm/pterm"
+	"github.com/urfave/cli/v2"
+	"netzer/utils"
+	"os"
 )
 
 // this function generates an IP file in the specified directory (main_cmd_function)
@@ -14,13 +14,13 @@ func IPFileGeneratorMain(c *cli.Context) error {
 	utils.IPIntro()
 	pterm.Info.Println(fmt.Sprintf("Generating IP file at %v", c.Args().First()))
 	if c.Args().First() == "" {
-		var error_txt string = "error: no path provided"
-		pterm.Error.Println(error_txt)
-		return fmt.Errorf("%s", error_txt)
+		var errorTxt = "error: no path provided"
+		pterm.Error.Println(errorTxt)
+		return fmt.Errorf("%s", errorTxt)
 	} else if c.Args().Get(1) == "" {
-		var error_txt string = "error: no file name provided"
-		pterm.Error.Println(error_txt)
-		return fmt.Errorf("%s", error_txt)
+		var errorTxt = "error: no file name provided"
+		pterm.Error.Println(errorTxt)
+		return fmt.Errorf("%s", errorTxt)
 	}
 	err := ipFileGenerator(c.Args().First(), c.Args().Get(1))
 	if err != nil {
@@ -38,6 +38,11 @@ func ipFileGenerator(path string, fileName string) error {
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			pterm.Error.Println(fmt.Sprintf("Error: %v", err))
+		}
+	}(file)
 	return nil
 }
