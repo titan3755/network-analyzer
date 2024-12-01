@@ -97,3 +97,17 @@ func DBStatisticsTableIntro() {
 	pterm.Info.Println("This utility allows you to view statistics of the database.")
 	fmt.Println()
 }
+
+func InterpreterIntro() {
+	ResetTerminal()
+	err := pterm.DefaultBigText.WithLetters(
+		putils.LettersFromStringWithStyle("NetZer  ", pterm.FgCyan.ToStyle()),
+		putils.LettersFromStringWithStyle("Interpreter", pterm.FgLightMagenta.ToStyle()),
+	).Render()
+	if err != nil {
+		return
+	}
+	pterm.Info.Println("Welcome to NetZer Interpreter!")
+	pterm.Info.Println("This utility allows you to interpret the data from the long analyzer database.")
+	fmt.Println()
+}

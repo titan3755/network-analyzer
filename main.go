@@ -6,6 +6,7 @@ import (
 	"netzer/analyzers"
 	"netzer/basic"
 	"netzer/data"
+	"netzer/interpreters"
 	"netzer/ip"
 	"netzer/ping"
 	"netzer/speedtest"
@@ -113,6 +114,12 @@ func mainApp() {
 				Action:  analyzers.StabilityAnalyzerLongMain,
 			},
 			{
+				Name:    "data-file-interpreter",
+				Aliases: []string{"dfi"},
+				Usage:   "interpret the data file",
+				Action:  interpreters.DataFileInterpreterMain,
+			},
+			{
 				Name:    "speed-test-local",
 				Aliases: []string{"stl"},
 				Usage:   "perform a speed test with respect to a domestic/local server",
@@ -129,6 +136,12 @@ func mainApp() {
 				Aliases: []string{"h"},
 				Usage:   "show help",
 				Action:  basic.ShowHelp,
+			},
+			{
+				Name:    "help-detailed",
+				Aliases: []string{"hd"},
+				Usage:   "show detailed help",
+				Action:  basic.ShowHelpDetailed,
 			},
 			{
 				Name:    "version",
