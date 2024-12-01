@@ -33,10 +33,10 @@ func SpeedTestAll(stTime int) map[string][][]string {
 				break
 			}
 			data := <-comms
-			fmt.Println(data)
-			if len(data) > 0 && data[0] != "" && data != nil {
+			if len(data) > 0 {
 				rawDataFinal[data[0]] = append(rawDataFinal[data[0]], data)
 			}
+			continue
 		}
 	}()
 	// test against all servers in serverLst until time runs out

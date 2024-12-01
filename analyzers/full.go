@@ -7,7 +7,8 @@ import (
 	"netzer/data"
 	"netzer/utils"
 	"strconv"
-	"time"
+	"sync"
+	_ "time"
 )
 
 func StabilityAnalyzerFullMain(c *cli.Context) error {
@@ -54,6 +55,7 @@ func StabilityAnalyzerFullMain(c *cli.Context) error {
 	}
 	fmt.Print("\n\n")
 	pterm.Info.Println("Starting the full stability test ...")
+	pterm.Info.Println("Note that the total required time may be greater than the analyzing time due to the speed test.")
 	go func() {
 		spnrInfo, _ := pterm.DefaultSpinner.Start("Performing stability test ...")
 		for {
@@ -66,13 +68,17 @@ func StabilityAnalyzerFullMain(c *cli.Context) error {
 	}()
 	// speed test
 	var speedTestData = make(map[string][][]string)
+	var wg sync.WaitGroup
+	wg.Add(2)
 	go func() {
+		defer wg.Done()
 		speedTestData = utils.SpeedTestAll(analyzingTime)
 	}()
 	// stability test
 	var stabilityTestData = make(map[string][][]string)
 	var errMap map[string][]error
 	go func() {
+		defer wg.Done()
 		stabilityTestData, errMap = utils.IcmpPingConcurrent(mergedIPList, analyzingTime)
 		if len(errMap) > 0 {
 			pterm.Error.Println("An error occurred while performing the stability test.")
@@ -82,43 +88,20 @@ func StabilityAnalyzerFullMain(c *cli.Context) error {
 			}
 		}
 	}()
-	var timeStamp = time.Now().Unix()
-	var stopTime = timeStamp + int64(analyzingTime)
-	var timeRunOut = false
-	// check if time run out
-	go func() {
-		for {
-			if time.Now().Unix() >= stopTime {
-				timeRunOut = true
-				break
-			}
-			continue
-		}
-	}()
-	// wait for both tests to complete
-	for {
-		if (len(speedTestData) > 0 && len(stabilityTestData) > 0) || timeRunOut {
-			break
-		}
-		continue
-	}
+	wg.Wait()
+	spinnerOn = false
 	// print the results
 	pterm.Info.Println("Generating results ...")
 	// table creator location
 	// for now, just print out the raw data for both tests (debugging purposes)
 	pterm.Info.Println("Speed test data:")
-	for key, value := range speedTestData {
-		pterm.Info.Println(key)
-		for _, val := range value {
-			pterm.Info.Println(val)
-		}
-	}
+	// print out the table
+	fmt.Print("\n")
+	utils.StatisticsTableCreatorForFullAnalyzerSpeedTest(speedTestData)
+	fmt.Print("\n")
 	pterm.Info.Println("Stability test data:")
-	for key, value := range stabilityTestData {
-		pterm.Info.Println(key)
-		for _, val := range value {
-			pterm.Info.Println(val)
-		}
-	}
+	// print out the table
+	fmt.Print("\n")
+	utils.StatisticsTableCreatorForFullAnalyzerStabilityTest(stabilityTestData, errMap)
 	return nil
 }
