@@ -83,4 +83,65 @@ func SpeedTestAll(stTime int) map[string][][]string {
 	return rawDataFinal
 }
 
-// to fix: concurrent map writes error
+func SpeedTestLongAnalyzer(commf chan<- map[string][][]string) map[string][][]string {
+	var comms = make(chan []string)
+	var stopTime = time.Now().Add(1 * time.Minute).Unix()
+	var rawDataFinal = make(map[string][][]string)
+	var wg sync.WaitGroup
+
+	var speedTester = st.New()
+	serverLst, _ := speedTester.FetchServers()
+	// update data
+	go func() {
+		for data := range comms {
+			if len(data) > 0 {
+				rawDataFinal[data[0]] = append(rawDataFinal[data[0]], data)
+				commf <- rawDataFinal
+			}
+		}
+	}()
+
+	// test against random servers in serverLst until time runs out
+	for {
+		if time.Now().Unix() >= stopTime {
+			break
+		}
+		for _, srvr := range serverLst {
+			if time.Now().Unix() >= stopTime {
+				break
+			}
+			wg.Add(1)
+			go func(srvre *st.Server) {
+				defer wg.Done()
+				err := srvre.PingTest(nil)
+				if err != nil {
+					fmt.Println(err)
+				}
+				err = srvre.DownloadTest()
+				if err != nil {
+					fmt.Println(err)
+				}
+				err = srvre.UploadTest()
+				if err != nil {
+					fmt.Println(err)
+				}
+				stats := []string{
+					srvre.Name,
+					srvre.Host,
+					srvre.Latency.String(),
+					fmt.Sprintf("%f Mbps", srvre.DLSpeed),
+					fmt.Sprintf("%f Mbps", srvre.ULSpeed),
+				}
+				if comms != nil {
+					comms <- stats
+				} else {
+					return
+				}
+			}(srvr)
+			wg.Wait()
+		}
+	}
+	return rawDataFinal
+}
+
+// to fix: concurrent map writes error (fixed)

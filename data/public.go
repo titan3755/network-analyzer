@@ -74,3 +74,11 @@ var PreviousAppVersionsInclLatestVersion = []string{
 	"0.2.0",
 	"0.1.0",
 }
+
+// this is the filename for stability test data
+
+var StabilityTestDataFileName = "stability_test_data.data"
+
+// this is the filename for speed test data
+
+var SpeedTestDataFileName = "speed_test_data.data"
