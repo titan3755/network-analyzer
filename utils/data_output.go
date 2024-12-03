@@ -3,6 +3,7 @@ package utils
 import (
 	"fmt"
 	"os"
+	"strings"
 )
 
 func OutputAnalyzerDataToFile(data map[string][][]string, fileName string) bool {
@@ -70,39 +71,96 @@ func OutputAnalyzerDataToFileAppend(data map[string][][]string, filepath string)
 	return success
 }
 
-func ReadAnalyzerDataFromFile(filepath string) (map[string][][]string, bool) {
-	var success = true
-	var err error
-	var f *os.File
-	f, err = os.Open(filepath)
-	if err != nil {
-		success = false
-	}
-	defer func(f *os.File) {
-		err := f.Close()
-		if err != nil {
-			success = false
-		}
-	}(f)
+func ReadAnalyzerSpeedTestDataFromFile(filepath string) map[string][][]string {
 	var data = make(map[string][][]string)
-	var key string
-	var value []string
-	var line string
-	for {
-		_, err = f.Read([]byte(line))
+	var host string
+	var results [][]string
+	var result []string
+	var file, err = os.Open(filepath)
+	if err != nil {
+		fmt.Println("An error occurred while opening the file:", err)
+		return data
+	}
+	defer func(file *os.File) {
+		err := file.Close()
 		if err != nil {
+			fmt.Println("An error occurred while closing the file:", err)
+		}
+	}(file)
+	var buf = make([]byte, 1024)
+	var n int
+	var err2 error
+	for {
+		n, err2 = file.Read(buf)
+		if n == 0 || err2 != nil {
 			break
 		}
-		if line == "\n" {
-			data[key] = append(data[key], value)
-			value = nil
-		} else {
-			if key == "" {
-				key = line
-			} else {
-				value = append(value, line)
+		var s = string(buf[:n])
+		var lines = SplitLines(s)
+		for _, line := range lines {
+			if line == "" {
+				data[host] = results
+				results = make([][]string, 0)
+				continue
 			}
+			if host == "" {
+				host = line
+				continue
+			}
+			result = SplitLine(line)
+			results = append(results, result)
 		}
 	}
-	return data, success
+	return data
+}
+
+func SplitLine(line string) []string {
+	return strings.Split(line, " ")
+}
+
+func SplitLines(s string) []string {
+	return strings.Split(s, "\n")
+}
+
+func ReadAnalyzerStabilityTestDataFromFile(filepath string) map[string][][]string {
+	var data = make(map[string][][]string)
+	var host string
+	var results [][]string
+	var result []string
+	var file, err = os.Open(filepath)
+	if err != nil {
+		fmt.Println("An error occurred while opening the file:", err)
+		return data
+	}
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			fmt.Println("An error occurred while closing the file:", err)
+		}
+	}(file)
+	var buf = make([]byte, 1024)
+	var n int
+	var err2 error
+	for {
+		n, err2 = file.Read(buf)
+		if n == 0 || err2 != nil {
+			break
+		}
+		var s = string(buf[:n])
+		var lines = SplitLines(s)
+		for _, line := range lines {
+			if line == "" {
+				data[host] = results
+				results = make([][]string, 0)
+				continue
+			}
+			if host == "" {
+				host = line
+				continue
+			}
+			result = SplitLine(line)
+			results = append(results, result)
+		}
+	}
+	return data
 }

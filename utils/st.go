@@ -129,8 +129,8 @@ func SpeedTestLongAnalyzer(commf chan<- map[string][][]string) map[string][][]st
 					srvre.Name,
 					srvre.Host,
 					srvre.Latency.String(),
-					fmt.Sprintf("%f Mbps", srvre.DLSpeed),
-					fmt.Sprintf("%f Mbps", srvre.ULSpeed),
+					fmt.Sprintf("%f Mbps", srvre.DLSpeed/1000000),
+					fmt.Sprintf("%f Mbps", srvre.ULSpeed/1000000),
 				}
 				if comms != nil {
 					comms <- stats

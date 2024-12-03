@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/pterm/pterm"
 	"github.com/urfave/cli/v2"
+	"netzer/data"
 	"netzer/utils"
 	"strconv"
 	"sync"
@@ -11,7 +12,7 @@ import (
 
 func StabilityAnalyzerLongMain(c *cli.Context) error {
 	utils.AnalyzerIntro()
-	var analyzingTime = 5 // the time is in minutes here
+	var analyzingTime = 2 // the time is in minutes here
 	if c.Args().First() != "" {
 		timeToInt, err := strconv.Atoi(c.Args().First())
 		if err != nil {
@@ -26,7 +27,7 @@ func StabilityAnalyzerLongMain(c *cli.Context) error {
 	pterm.Info.Println("This analyzer will create a complete network stability report by pinging different servers, checking the packet losses and simultaneously speed testing the network")
 	pterm.Info.Println("The speed testing is done to ensure that the network can hold up under load")
 	pterm.Info.Println("This specific analyzer will run for a longer time in the background to ensure proper network stability testing")
-	pterm.Info.Println("The data will be written to a file or the existing data in the file will be updated every 5 minutes")
+	pterm.Info.Println("The data will be written to a file or the existing data in the file will be updated every minute")
 	pterm.Info.Println("The analyzer will run for", analyzingTime, "minutes.")
 	pterm.Info.Println("Starting the long stability test [background process] ...")
 	pterm.Info.Println("Note that the total required time may be greater than the analyzing time due to the speed test")
@@ -34,5 +35,16 @@ func StabilityAnalyzerLongMain(c *cli.Context) error {
 	wg.Add(1)
 	go utils.AnalyzerBackgroundProcess(analyzingTime, &wg)
 	wg.Wait()
+	result, _ := pterm.DefaultInteractiveConfirm.WithConfirmText("Yes").WithDefaultText("Do you want to view the results now?").WithRejectText("No").Show()
+	pterm.Println()
+	if result {
+		var spdData = utils.ReadAnalyzerSpeedTestDataFromFile(data.SpeedTestDataFileName)
+		var stData = utils.ReadAnalyzerStabilityTestDataFromFile(data.StabilityTestDataFileName)
+		utils.ShowAnalyzerSpeedTestData(spdData)
+		utils.ShowAnalyzerStabilityTestData(stData)
+	} else {
+		pterm.Info.Println("The stability test results will be available in the file:", data.StabilityTestDataFileName)
+		pterm.Info.Println("The speed test results will be available in the file:", data.SpeedTestDataFileName)
+	}
 	return nil
 }
