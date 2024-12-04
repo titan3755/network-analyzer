@@ -9,7 +9,7 @@ import (
 
 // SetSettings is a function that sets a setting in the settings.prp file
 
-func SetSettings(setting string, property string) error {
+func SetSettings(_ string, property string) error {
 	availableSettings := data.AvailableSettings
 	var fileData []string
 	for _, availableSetting := range availableSettings {

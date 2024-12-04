@@ -12,7 +12,7 @@ import (
 
 // SpeedTestGlobalMain function is the main function for the global speed test
 
-func SpeedTestGlobalMain(c *cli.Context) error {
+func SpeedTestGlobalMain(_ *cli.Context) error {
 	utils.SpeedTestIntro()
 	var spinnerOn = true
 	var speedTester = st.New()

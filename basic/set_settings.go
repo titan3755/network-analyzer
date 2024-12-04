@@ -8,7 +8,7 @@ import (
 	"netzer/utils"
 )
 
-func SetSettingsMain(c *cli.Context) error {
+func SetSettingsMain(_ *cli.Context) error {
 	utils.BasicIntro()
 	settingFile := data.SettingsFileName
 	fmt.Print("\n")

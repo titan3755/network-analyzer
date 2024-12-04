@@ -6,7 +6,7 @@ import (
 	"netzer/utils"
 )
 
-func WipeSettingsMain(c *cli.Context) error {
+func WipeSettingsMain(_ *cli.Context) error {
 	utils.BasicIntro()
 	pterm.Info.Println("Wiping settings...")
 	err := utils.WipeSettings()

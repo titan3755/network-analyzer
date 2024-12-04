@@ -12,7 +12,7 @@ import (
 
 func StabilityAnalyzerLongMain(c *cli.Context) error {
 	utils.AnalyzerIntro()
-	var analyzingTime = 2 // the time is in minutes here
+	var analyzingTime = 5 // the time is in minutes here
 	if c.Args().First() != "" {
 		timeToInt, err := strconv.Atoi(c.Args().First())
 		if err != nil {

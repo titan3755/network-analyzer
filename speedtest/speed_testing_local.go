@@ -10,7 +10,7 @@ import (
 
 // SpeedTestLocalMain function is the main function for the local speed test
 
-func SpeedTestLocalMain(c *cli.Context) error {
+func SpeedTestLocalMain(_ *cli.Context) error {
 	utils.SpeedTestIntro()
 	var spinnerOn = true
 	pterm.Info.Println("Starting quick speed test to domestic server ... [powered by speedtest.net]")

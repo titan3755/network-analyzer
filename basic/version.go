@@ -10,7 +10,7 @@ import (
 
 // this function shows the version of the application
 
-func ShowVersion(c *cli.Context) error {
+func ShowVersion(_ *cli.Context) error {
 	utils.BasicIntro()
 	pterm.Info.Println("Version: ", data.CurrentAppVersion)
 	fmt.Print("\n")

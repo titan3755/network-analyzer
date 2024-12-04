@@ -66,6 +66,9 @@ var CurrentAppVersion = PreviousAppVersionsInclLatestVersion[0]
 // this is the list of all previous app versions including the latest version
 
 var PreviousAppVersionsInclLatestVersion = []string{
+	"1.0.0",
+	"0.9.0",
+	"0.8.0",
 	"0.7.0",
 	"0.6.0",
 	"0.5.0",

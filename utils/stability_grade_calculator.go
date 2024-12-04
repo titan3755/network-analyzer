@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-func CalculateStabilityGrade(psent, precv, ploss, minrtt, maxrtt, avgrtt string) (string, error) {
+func CalculateStabilityGrade(_, _, ploss, minrtt, maxrtt, avgrtt string) (string, error) {
 	var stabGrade = data.StabilityGrade
 	// remove "ms" from minrtt, maxrtt and avgrtt
 	minrtt = minrtt[:len(minrtt)-2]
